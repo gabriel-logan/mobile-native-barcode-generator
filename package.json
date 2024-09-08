@@ -1,6 +1,6 @@
 {
   "name": "mobile-native-barcode-generator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library to generate barcodes and qr codes natively using Kotlin and Swift, integrated with react native and expo.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
