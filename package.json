@@ -5,6 +5,7 @@
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -18,7 +19,6 @@
     }
   },
   "files": [
-    "src",
     "lib",
     "android",
     "ios",
@@ -54,7 +54,8 @@
     "barcode",
     "qr-code",
     "barcode-generator",
-    "qr-code-generator"
+    "qr-code-generator",
+    "mobile-native-barcode-generator"
   ],
   "repository": {
     "type": "git",
