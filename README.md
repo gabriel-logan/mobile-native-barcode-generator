@@ -1,6 +1,14 @@
 # mobile-native-barcode-generator
 
-Library to generate barcodes natively using Kotlin and Swift
+Library to generate barcodes and qr codes natively using Kotlin and Swift, integrated with react native and expo.
+
+## Supported Architectures
+
+- Android - ✅
+- Ios - ❌
+- Windows - ❌
+- Mac - ❌
+- Linux - ❌
 
 ## Installation
 
@@ -8,21 +16,94 @@ Library to generate barcodes natively using Kotlin and Swift
 npm install mobile-native-barcode-generator
 ```
 
-## Usage
-
-
-```js
-import { multiply } from 'mobile-native-barcode-generator';
-
-// ...
-
-const result = await multiply(3, 7);
+```sh
+yarn add mobile-native-barcode-generator
 ```
 
+## Usage
+
+### Available methods
+
+```js
+import {
+	BarcodeView,
+	QRCodeView,
+	generateBarcode,
+	generateQRCode,
+} from "mobile-native-barcode-generator";
+```
+
+### Using the components
+
+```js
+import { BarcodeView, QRCodeView } from "mobile-native-barcode-generator";
+import { useState } from "react";
+import { StyleSheet, View, Text, TextInput, Button } from "react-native";
+
+export default function App() {
+	const [value, setValue] = useState("");
+	const [barcodeValue, setBarcodeValue] = useState("");
+	const [toggleGenCode, setToggleGenCode] = useState("QR");
+
+	return (
+		<View style={styles.container}>
+			<Text>Result: </Text>
+			{barcodeValue &&
+				(toggleGenCode === "QR" ? (
+					<QRCodeView value={barcodeValue} width={250} height={250} />
+				) : (
+					<BarcodeView value={barcodeValue} width={300} height={100} />
+				))}
+			<TextInput
+				value={value}
+				onChangeText={setValue}
+				placeholder="Type Here"
+			/>
+			<Button title="Generate QR Code" onPress={() => setBarcodeValue(value)} />
+			<Button
+				title="Toggle QR/Barcode"
+				onPress={() =>
+					setToggleGenCode(toggleGenCode === "QR" ? "Barcode" : "QR")
+				}
+			/>
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+});
+```
+
+### Using generating functions
+
+```js
+import { generateBarcode, generateQRCode } from "mobile-native-barcode-generator";
+
+async function waitForIt() {
+    const qrCodeGenerated = await generateQRCode("Hello", 200, 200);
+
+    console.log(qrCodeGenerated);
+
+    const barCodeGenerated = await generateBarcode("Hello", 300, 200);
+
+    console.log(barCodeGenerated);
+}
+
+waitForIt();
+```
 
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+
+## Contributors
+
+- Gabriel Logan - Creator
 
 ## License
 
