@@ -20,6 +20,19 @@ class MobileNativeBarcodeGeneratorModule(reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
+  fun generateBarcode(value: String, width: Int, height: Int, promise: Promise) {
+    try {
+      val bitMatrix: BitMatrix = MultiFormatWriter().encode(value, BarcodeFormat.CODE_128, width, height)
+      val bitmap = bitMatrixToBitmap(bitMatrix)
+
+      val base64Bitmap = bitmapToBase64(bitmap)
+      promise.resolve(base64Bitmap)
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
   fun generateQRCode(value: String, width: Int, height: Int, promise: Promise) {
     try {
       val bitMatrix: BitMatrix = MultiFormatWriter().encode(value, BarcodeFormat.QR_CODE, width, height)

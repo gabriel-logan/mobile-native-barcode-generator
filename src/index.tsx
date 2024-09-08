@@ -34,6 +34,22 @@ export async function generateQRCode(
 	return finalReturn;
 }
 
+export async function generateBarcode(
+	value: string,
+	width: number,
+	height: number,
+): Promise<string> {
+	const returnValue = await MobileNativeBarcodeGenerator.generateBarcode(
+		value,
+		width,
+		height,
+	);
+
+	const finalReturn = `data:image/png;base64,${returnValue}`;
+
+	return finalReturn;
+}
+
 interface QRCodeViewProps {
 	value: string;
 	width: number;
@@ -74,6 +90,57 @@ export function QRCodeView({ value, width, height }: QRCodeViewProps) {
 			{barcode && (
 				<Image
 					testID="qr-code"
+					source={{ uri: barcode }}
+					style={{
+						width,
+						height,
+					}}
+				/>
+			)}
+		</>
+	);
+}
+
+interface BarcodeViewProps {
+	value: string;
+	width: number;
+	height: number;
+}
+
+export function BarcodeView({ value, width, height }: BarcodeViewProps) {
+	const [barcode, setBarcode] = useState<string | undefined>("");
+
+	if (value === "") {
+		throw new Error("Value cannot be empty");
+	}
+
+	if (width <= 0 || typeof width !== "number") {
+		throw new Error("Width must be a positive number");
+	}
+
+	if (height <= 0 || typeof height !== "number") {
+		throw new Error("Height must be a positive number");
+	}
+
+	useEffect(() => {
+		async function waitFor() {
+			const barcodeGeneradet = await generateBarcode(value, width, height);
+
+			setBarcode(barcodeGeneradet);
+		}
+
+		waitFor();
+
+		return () => {
+			setBarcode("");
+		};
+	}, [height, value, width]);
+
+	return (
+		<>
+			{barcode && (
+				<Image
+					testID="barcode"
 					source={{ uri: barcode }}
 					style={{
 						width,
