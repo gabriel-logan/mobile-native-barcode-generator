@@ -1,8 +1,13 @@
 @objc(MobileNativeBarcodeGenerator)
 class MobileNativeBarcodeGenerator: NSObject {
 
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
+  @objc(generateBarcode:withResolver:withRejecter:)
+  func generateBarcode(data: String, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    resolve("Generated Barcode")
+  }
+
+  @objc(generateQRCode:withResolver:withRejecter:)
+  func generateQRCode(data: String, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    resolve("Generated QR Code")
   }
 }
