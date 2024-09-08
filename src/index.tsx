@@ -56,7 +56,13 @@ export function QRCodeView({ value, width, height }: QRCodeViewProps) {
 	}
 
 	useEffect(() => {
-		generateQRCode(value, width, height).then(setBarcode);
+		async function waitFor() {
+			const qrCodeGeneradet = await generateQRCode(value, width, height);
+
+			setBarcode(qrCodeGeneradet);
+		}
+
+		waitFor();
 
 		return () => {
 			setBarcode("");
@@ -67,6 +73,7 @@ export function QRCodeView({ value, width, height }: QRCodeViewProps) {
 		<>
 			{barcode && (
 				<Image
+					testID="qr-code"
 					source={{ uri: barcode }}
 					style={{
 						width,

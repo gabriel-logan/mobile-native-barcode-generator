@@ -1,1 +1,80 @@
-it.todo("write a test");
+import { render } from "@testing-library/react-native";
+
+import { QRCodeView, generateQRCode } from "../index";
+
+jest.mock("react-native", () => ({
+	NativeModules: {
+		MobileNativeBarcodeGenerator: {
+			generateQRCode: jest.fn().mockResolvedValue("mocked_base64_string"),
+		},
+	},
+	Platform: {
+		select: jest.fn().mockImplementation((obj) => obj.default),
+	},
+
+	Image: (props: any) => {
+		return <div {...props} />;
+	},
+}));
+
+describe("App", () => {
+	// eslint-disable-next-line no-console
+	const originalError = console.error;
+
+	beforeAll(() => {
+		// eslint-disable-next-line no-console
+		console.error = jest.fn();
+	});
+
+	afterAll(() => {
+		// eslint-disable-next-line no-console
+		console.error = originalError;
+	});
+
+	describe("QRCodeView", () => {
+		it("should render QRCodeView correctly", async () => {
+			render(<QRCodeView value="test" width={100} height={100} />);
+		});
+
+		it("should throw an error if value is empty", () => {
+			expect(() =>
+				render(<QRCodeView value="" width={100} height={100} />),
+			).toThrow("Value cannot be empty");
+		});
+
+		it("should throw an error if width is not a positive number", () => {
+			expect(() =>
+				render(<QRCodeView value="test" width={0} height={100} />),
+			).toThrow("Width must be a positive number");
+
+			expect(() =>
+				render(<QRCodeView value="test" width={-1} height={100} />),
+			).toThrow("Width must be a positive number");
+
+			expect(() =>
+				render(<QRCodeView value="test" width={"100" as any} height={100} />),
+			).toThrow("Width must be a positive number");
+		});
+
+		it("should throw an error if height is not a positive number", () => {
+			expect(() =>
+				render(<QRCodeView value="test" width={100} height={0} />),
+			).toThrow("Height must be a positive number");
+
+			expect(() =>
+				render(<QRCodeView value="test" width={100} height={-1} />),
+			).toThrow("Height must be a positive number");
+
+			expect(() =>
+				render(<QRCodeView value="test" width={100} height={"100" as any} />),
+			).toThrow("Height must be a positive number");
+		});
+	});
+
+	describe("generateQRCode", () => {
+		it("should generate a QR code", async () => {
+			const result = await generateQRCode("test", 100, 100);
+			expect(result).toBe("data:image/png;base64,mocked_base64_string");
+		});
+	});
+});
