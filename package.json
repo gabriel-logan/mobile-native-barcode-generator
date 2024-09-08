@@ -121,6 +121,7 @@
       "commitMessage": "chore: release ${version}",
       "tagName": "v${version}"
     },
+    "increment": "patch",
     "npm": {
       "publish": true
     },
