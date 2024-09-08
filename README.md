@@ -35,6 +35,28 @@ import {
 
 ### Using the components
 
+#### Simple example
+
+```js
+import { QRCodeView } from "mobile-native-barcode-generator";
+
+export default function App() {
+	return (
+		<View style={styles.container}>
+			<QRCodeView value={"Hello World!"} width={250} height={250} />
+		</View>
+	);
+}
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+});
+```
+
 ```js
 import { BarcodeView, QRCodeView } from "mobile-native-barcode-generator";
 import { useState } from "react";
