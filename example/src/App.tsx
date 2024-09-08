@@ -1,17 +1,23 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'mobile-native-barcode-generator';
+import { QRCodeView } from 'mobile-native-barcode-generator';
+import { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, Button } from 'react-native';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const [value, setValue] = useState<string>('');
+  const [barcodeValue, setBarcodeValue] = useState<string>('');
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: </Text>
+      {barcodeValue && (
+        <QRCodeView value={barcodeValue} width={250} height={250} />
+      )}
+      <TextInput
+        value={value}
+        onChangeText={setValue}
+        placeholder="Type Here"
+      />
+      <Button title="Generate QR Code" onPress={() => setBarcodeValue(value)} />
     </View>
   );
 }
@@ -21,10 +27,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
   },
 });

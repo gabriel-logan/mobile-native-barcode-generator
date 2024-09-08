@@ -1,7 +1,7 @@
 {
   "name": "mobile-native-barcode-generator",
   "version": "0.1.0",
-  "description": "Library to generate barcodes natively using Kotlin and Swift",
+  "description": "Library to generate barcodes and qr codes natively using Kotlin and Swift, integrated with react native and expo.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -53,7 +53,7 @@
     "type": "git",
     "url": "git+https://github.com/gabriel-logan/mobile-native-barcode-generator.git"
   },
-  "author": "Gabriel Logan <gabrielcoutolima@protonmail.ch> (https://github.com/gabriel-logan)",
+  "author": "Gabriel Logan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/gabriel-logan/mobile-native-barcode-generator/issues"
