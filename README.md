@@ -124,6 +124,10 @@ async function waitForIt() {
 waitForIt();
 ```
 
+## Test using Jest
+
+- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/docs/TEST.md)
+
 ## Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
