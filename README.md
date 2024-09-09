@@ -126,7 +126,7 @@ waitForIt();
 
 ## Test using Jest
 
-- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/tree/main/docs)
+- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/blob/main/docs/TEST.md)
 
 ## Contributing
 
