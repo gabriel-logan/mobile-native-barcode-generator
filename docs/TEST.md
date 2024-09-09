@@ -1,11 +1,12 @@
 # Tests
 
-## Mock Setup
+## 1. Mock Setup for Jest
 
-### Step 1: Create the `jest.setup.js` file in the root folder
-- If the file already exists, skip this step.
+### Step 1: Create the `jest.setup.js` file
+- **Location:** Root folder
+- **Note:** If the file already exists, skip this step.
 
-### Step 2: Add the following code to the setup file
+### Step 2: Add the following mock implementation to `jest.setup.js`
 
 ```js
 jest.mock("mobile-native-barcode-generator", () => {
@@ -16,20 +17,20 @@ jest.mock("mobile-native-barcode-generator", () => {
     generateBarcode: jest.fn().mockResolvedValue("mockedBarcode"),
     QRCodeView: () => (
       <>
-        <Image source={{ uri: "mockedQRCode" }} width={200} height={200} />
+        <Image source={{ uri: "mockedQRCode" }} />
       </>
     ),
     BarcodeView: () => (
       <>
-        <Image source={{ uri: "mockedQRCode" }} width={200} height={100} />
+        <Image source={{ uri: "mockedBarcode" }} />
       </>
     ),
   };
 });
 ```
 
-### Step 3: Add the setup file to `jest.config.js`
-- If another setup file is already configured, you can add this before or after, or paste the mock into the existing setup file.
+### Step 3: Update `jest.config.js`
+- If another setup file is already configured, you can place this file before or after the existing one. Alternatively, paste the mock code into the existing setup file.
 
 ```js
 /** @type {import("jest").Config} */
@@ -42,5 +43,6 @@ const config = {
 module.exports = config;
 ```
 
-### Step 4: Finalize and run the tests
-- Ensure all configurations are correct and execute the tests.
+### Step 4: Finalize and Run Tests
+- **Review:** Ensure that all configurations are correctly set.
+- **Run:** Execute your tests using Jest.
