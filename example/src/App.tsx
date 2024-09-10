@@ -16,14 +16,14 @@ export default function App() {
 	async function buttonToSaveOnGallery() {
 		try {
 			const result1 = await saveBarcodeToGallery(
-				"BARRACODE",
+				"BAR_CODE",
 				300,
 				100,
 				"CODE128",
 			);
 
 			const result2 = await saveQRCodeToGallery(
-				"Hello Man",
+				"QR_CODE",
 				300,
 				300,
 				"GEREINEGAO",
