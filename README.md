@@ -137,7 +137,7 @@ waitForIt();
 
 ### Saving generated image to internal gallery
 
-- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/blob/main/docs/saveToGallery)
+- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/blob/main/docs/saveToGallery.md)
 
 ## Test using Jest
 
