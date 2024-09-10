@@ -14,7 +14,7 @@ Library to generate barcodes and qr codes natively using Kotlin and Swift, integ
 ## Supported Frameworks
 
 - React Native - ✅
-- Expo - ❌ - [See Expo Version](https://github.com/gabriel-logan/expo-barcode)
+- Expo GO - ❌ - [See Expo Version](https://github.com/gabriel-logan/expo-barcode)
 
 ## Supported Architectures
 
