@@ -10,6 +10,14 @@ RCT_EXTERN_METHOD(generateQRCode:(NSString *)value width:(NSInteger)width height
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(saveQRCodeToGallery:(NSString *)value width:(NSInteger)width height:(NSInteger)height fileName:(NSString *)fileName
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(saveBarcodeToGallery:(NSString *)value width:(NSInteger)width height:(NSInteger)height fileName:(NSString *)fileName
+                 withResolver:(RCTPromiseResolveBlock)resolve
+                 withRejecter:(RCTPromiseRejectBlock)reject)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;
