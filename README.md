@@ -1,4 +1,13 @@
-# mobile-native-barcode-generator
+> [!NOTE]
+> I accept help to make the IOS version.
+
+# Mobile Native Barcode Generator
+
+- mobile-native-barcode-generator
+
+[![npm version](https://badge.fury.io/js/mobile-native-barcode-generator.svg)](https://badge.fury.io/js/mobile-native-barcode-generator)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm downloads](https://img.shields.io/npm/dm/mobile-native-barcode-generator.svg?style=flat-square)](https://npm-stat.com/charts.html?package=mobile-native-barcode-generator)
 
 Library to generate barcodes and qr codes natively using Kotlin and Swift, integrated with react native.
 
