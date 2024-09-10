@@ -30,7 +30,7 @@ class MobileNativeBarcodeGenerator: NSObject {
     saveCodeToGallery(value: value, type: "CIQRCodeGenerator", width: width, height: height, fileName: fileName, resolve: resolve, reject: reject)
   }
   
-  @objc(saveBarcodeToGallery:value:width:height:fileName:withResolver:withRejecter:)
+  @objc(saveBarcodeToGallery:width:height:fileName:withResolver:withRejecter:)
   func saveBarcodeToGallery(value: String, width: NSNumber, height: NSNumber, fileName: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
     saveCodeToGallery(value: value, type: "CICode128BarcodeGenerator", width: width, height: height, fileName: fileName, resolve: resolve, reject: reject)
   }
