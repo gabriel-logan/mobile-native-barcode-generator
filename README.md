@@ -35,6 +35,8 @@ import {
 	QRCodeView,
 	generateBarcode,
 	generateQRCode,
+	saveBarcodeToGallery,
+	saveQRCodeToGallery,
 } from "mobile-native-barcode-generator";
 ```
 
@@ -123,6 +125,10 @@ async function waitForIt() {
 
 waitForIt();
 ```
+
+### Saving generated image to internal gallery
+
+- [README](https://github.com/gabriel-logan/mobile-native-barcode-generator/blob/main/docs/saveToGallery)
 
 ## Test using Jest
 
