@@ -78,6 +78,14 @@ describe("App", () => {
 				const result = await generateQRCode("test", 100, 100);
 				expect(result).toBe("data:image/png;base64,mocked_base64_string");
 			});
+
+			it("should throw an error if value.lenght > 2500", async () => {
+				await expect(
+					async () => await generateQRCode("a".repeat(2501), 100, 100),
+				).rejects.toThrow(
+					"QR code value length must be less than 2500 characters",
+				);
+			});
 		});
 	});
 
@@ -130,6 +138,14 @@ describe("App", () => {
 			it("should generate a QR code", async () => {
 				const result = await generateBarcode("test", 100, 100);
 				expect(result).toBe("data:image/png;base64,mocked_base64_string");
+			});
+
+			it("should throw an error if value.lenght > 80", async () => {
+				await expect(
+					async () => await generateBarcode("a".repeat(81), 100, 100),
+				).rejects.toThrow(
+					"Barcode value length must be less than 80 characters",
+				);
 			});
 		});
 	});
