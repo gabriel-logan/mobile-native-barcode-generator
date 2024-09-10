@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { Image } from "react-native";
 
-import generateQRCode from "./generateQRCode";
-import type { QRCodeViewProps } from "./types/Components";
+import generateBarcode from "../generateBarcode";
+import type { BarcodeViewProps } from "../types/Components";
 
-export default function QRCodeView({ value, width, height }: QRCodeViewProps) {
+export default function BarcodeView({
+	testID,
+	value,
+	width,
+	height,
+	style,
+	onLoad,
+	onError,
+}: BarcodeViewProps) {
 	const [barcode, setBarcode] = useState<string | undefined>("");
 
 	if (value === "") {
@@ -21,9 +29,9 @@ export default function QRCodeView({ value, width, height }: QRCodeViewProps) {
 
 	useEffect(() => {
 		async function waitFor() {
-			const qrCodeGeneradet = await generateQRCode(value, width, height);
+			const barcodeGeneradet = await generateBarcode(value, width, height);
 
-			setBarcode(qrCodeGeneradet);
+			setBarcode(barcodeGeneradet);
 		}
 
 		waitFor();
@@ -37,12 +45,17 @@ export default function QRCodeView({ value, width, height }: QRCodeViewProps) {
 		<>
 			{barcode && (
 				<Image
-					testID="qr-code"
+					testID={testID}
 					source={{ uri: barcode }}
-					style={{
-						width,
-						height,
-					}}
+					style={[
+						{
+							width,
+							height,
+						},
+						style,
+					]}
+					onLoad={onLoad}
+					onError={onError}
 				/>
 			)}
 		</>

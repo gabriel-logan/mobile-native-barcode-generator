@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {
 	BarcodeView,
 	QRCodeView,
@@ -8,7 +7,7 @@ import {
 import { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Button, Alert } from "react-native";
 
-export default function App() {
+export default function MainPage() {
 	const [value, setValue] = useState<string>("");
 	const [barcodeValue, setBarcodeValue] = useState<string>("");
 	const [toggleGenCode, setToggleGenCode] = useState("QR");
@@ -37,7 +36,7 @@ export default function App() {
 
 	return (
 		<View style={styles.container}>
-			<Text>Result: </Text>
+			<Text style={styles.resultText}>Result: </Text>
 			{barcodeValue &&
 				(toggleGenCode === "QR" ? (
 					<QRCodeView value={barcodeValue} width={250} height={250} />
@@ -45,11 +44,12 @@ export default function App() {
 					<BarcodeView value={barcodeValue} width={300} height={100} />
 				))}
 			<TextInput
+				style={styles.input}
 				value={value}
 				onChangeText={setValue}
 				placeholder="Type Here"
 			/>
-			<View style={{ gap: 15 }}>
+			<View style={styles.buttonContainer}>
 				<Button
 					title="Generate QR Code"
 					onPress={() => setBarcodeValue(value)}
@@ -71,5 +71,27 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+		backgroundColor: "#f5f5f5",
+		padding: 20,
+	},
+	resultText: {
+		fontSize: 18,
+		fontWeight: "bold",
+		marginBottom: 20,
+	},
+	input: {
+		height: 40,
+		borderColor: "gray",
+		borderWidth: 1,
+		borderRadius: 5,
+		paddingHorizontal: 10,
+		marginBottom: 20,
+		width: "80%",
+		color: "black",
+		marginTop: 20,
+	},
+	buttonContainer: {
+		gap: 15,
+		width: "80%",
 	},
 });

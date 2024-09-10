@@ -1,11 +1,6 @@
 import { render } from "@testing-library/react-native";
 
-import {
-	BarcodeView,
-	QRCodeView,
-	generateBarcode,
-	generateQRCode,
-} from "../index";
+import { BarcodeView, QRCodeView, generateBarcode, generateQRCode } from "..";
 
 jest.mock("react-native", () => ({
 	NativeModules: {
