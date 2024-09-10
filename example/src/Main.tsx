@@ -5,11 +5,22 @@ import {
 	saveQRCodeToGallery,
 } from "mobile-native-barcode-generator";
 import { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button, Alert } from "react-native";
+import {
+	StyleSheet,
+	View,
+	Text,
+	TextInput,
+	Button,
+	Alert,
+	TouchableOpacity,
+	Linking,
+} from "react-native";
 
 export default function MainPage() {
 	const [value, setValue] = useState<string>("");
-	const [barcodeValue, setBarcodeValue] = useState<string>("");
+	const [barcodeValue, setBarcodeValue] = useState<string>(
+		"https://encurtador.com.br/yulae",
+	);
 	const [toggleGenCode, setToggleGenCode] = useState("QR");
 
 	async function buttonToSaveOnGallery() {
@@ -21,12 +32,7 @@ export default function MainPage() {
 				"CODE128",
 			);
 
-			const result2 = await saveQRCodeToGallery(
-				"QR_CODE",
-				300,
-				300,
-				"GEREINEGAO",
-			);
+			const result2 = await saveQRCodeToGallery("QR_CODE", 300, 300, "QR_CODE");
 
 			Alert.alert("Success", `${result1} and ${result2}`);
 		} catch (error) {
@@ -39,15 +45,16 @@ export default function MainPage() {
 			<Text style={styles.resultText}>Result: </Text>
 			{barcodeValue &&
 				(toggleGenCode === "QR" ? (
-					<QRCodeView value={barcodeValue} width={250} height={250} />
+					<QRCodeView value={barcodeValue} width={200} height={200} />
 				) : (
-					<BarcodeView value={barcodeValue} width={300} height={100} />
+					<BarcodeView value={barcodeValue} width={200} height={100} />
 				))}
 			<TextInput
 				style={styles.input}
 				value={value}
 				onChangeText={setValue}
 				placeholder="Type Here"
+				placeholderTextColor="gray"
 			/>
 			<View style={styles.buttonContainer}>
 				<Button
@@ -62,6 +69,23 @@ export default function MainPage() {
 				/>
 				<Button title="Save on Gallery" onPress={buttonToSaveOnGallery} />
 			</View>
+			<View style={styles.linkContainer}>
+				<Text style={styles.linkText}>
+					You can test QR and Barcode using my app on playstore
+				</Text>
+				<TouchableOpacity
+					onPress={() => {
+						Linking.openURL(
+							"https://play.google.com/store/apps/details?id=com.gabriellogan.noadqrbarcodescanner",
+						);
+					}}
+					style={styles.linkButton}
+				>
+					<Text style={styles.linkButtonText}>
+						https://play.google.com/store/apps/details?id=com.gabriellogan.noadqrbarcodescanner
+					</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -71,7 +95,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
-		backgroundColor: "#f5f5f5",
+		backgroundColor: "#121212",
 		padding: 20,
 	},
 	resultText: {
@@ -87,11 +111,31 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 10,
 		marginBottom: 20,
 		width: "80%",
-		color: "black",
 		marginTop: 20,
+		color: "white",
 	},
 	buttonContainer: {
 		gap: 15,
 		width: "80%",
+	},
+	linkContainer: {
+		marginTop: 20,
+		alignItems: "center",
+	},
+	linkText: {
+		color: "white",
+		fontSize: 16,
+		marginBottom: 10,
+		textAlign: "center",
+	},
+	linkButton: {
+		backgroundColor: "#1E90FF",
+		padding: 10,
+		borderRadius: 5,
+	},
+	linkButtonText: {
+		color: "white",
+		fontSize: 14,
+		textAlign: "center",
 	},
 });

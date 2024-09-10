@@ -5,6 +5,10 @@ export default async function generateBarcode(
 	width: number,
 	height: number,
 ): Promise<string> {
+	if (value.length > 80) {
+		throw new Error("Barcode value length must be less than 80 characters");
+	}
+
 	const returnValue = await MobileNativeBarcodeGenerator.generateBarcode(
 		value,
 		width,
