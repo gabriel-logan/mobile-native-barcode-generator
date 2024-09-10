@@ -23,10 +23,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 
 class MobileNativeBarcodeGeneratorModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {

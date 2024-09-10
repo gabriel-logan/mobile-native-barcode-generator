@@ -63,7 +63,6 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-
   }
 
   buildTypes {
@@ -95,8 +94,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  
-  // ZXing library
+
+  // Zxing library
   implementation 'com.google.zxing:core:3.4.1'
   implementation 'com.google.zxing:javase:3.4.1'
 
