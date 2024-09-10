@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import { NativeModules, Platform, Image } from "react-native";
 
+interface GeneralViewProps {
+	value: string;
+	width: number;
+	height: number;
+}
+
+interface QRCodeViewProps extends GeneralViewProps {}
+
+interface BarcodeViewProps extends GeneralViewProps {}
+
 const LINKING_ERROR =
 	`The package 'mobile-native-barcode-generator' doesn't seem to be linked. Make sure: \n\n` +
 	Platform.select({ ios: "- You have run 'pod install'\n", default: "" }) +
@@ -50,12 +60,6 @@ export async function generateBarcode(
 	return finalReturn;
 }
 
-interface QRCodeViewProps {
-	value: string;
-	width: number;
-	height: number;
-}
-
 export function QRCodeView({ value, width, height }: QRCodeViewProps) {
 	const [barcode, setBarcode] = useState<string | undefined>("");
 
@@ -101,12 +105,6 @@ export function QRCodeView({ value, width, height }: QRCodeViewProps) {
 	);
 }
 
-interface BarcodeViewProps {
-	value: string;
-	width: number;
-	height: number;
-}
-
 export function BarcodeView({ value, width, height }: BarcodeViewProps) {
 	const [barcode, setBarcode] = useState<string | undefined>("");
 
@@ -150,4 +148,68 @@ export function BarcodeView({ value, width, height }: BarcodeViewProps) {
 			)}
 		</>
 	);
+}
+
+export async function saveQRCodeToGallery(
+	value: string,
+	width: number,
+	height: number,
+	fileName: string,
+) {
+	if (value === "") {
+		throw new Error("Value cannot be empty");
+	}
+
+	if (width <= 0 || typeof width !== "number") {
+		throw new Error("Width must be a positive number");
+	}
+
+	if (height <= 0 || typeof height !== "number") {
+		throw new Error("Height must be a positive number");
+	}
+
+	if (fileName.trim() === "") {
+		throw new Error("Filename cannot be empty");
+	}
+
+	const result: string = await MobileNativeBarcodeGenerator.saveQRCodeToGallery(
+		value,
+		width,
+		height,
+		fileName,
+	);
+	return result;
+}
+
+export async function saveBarcodeToGallery(
+	value: string,
+	width: number,
+	height: number,
+	fileName: string,
+) {
+	if (value === "") {
+		throw new Error("Value cannot be empty");
+	}
+
+	if (width <= 0 || typeof width !== "number") {
+		throw new Error("Width must be a positive number");
+	}
+
+	if (height <= 0 || typeof height !== "number") {
+		throw new Error("Height must be a positive number");
+	}
+
+	if (fileName.trim() === "") {
+		throw new Error("Filename cannot be empty");
+	}
+
+	const result: string =
+		await MobileNativeBarcodeGenerator.saveBarcodeToGallery(
+			value,
+			width,
+			height,
+			fileName,
+		);
+
+	return result;
 }

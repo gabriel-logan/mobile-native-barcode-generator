@@ -1,5 +1,19 @@
 package com.mobilenativebarcodegenerator
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Context
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -9,8 +23,10 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 
-import android.graphics.Bitmap
-import android.graphics.Color
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
 
 class MobileNativeBarcodeGeneratorModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -45,6 +61,57 @@ class MobileNativeBarcodeGeneratorModule(reactContext: ReactApplicationContext) 
     } catch (e: Exception) {
       promise.reject(e)
     }
+  }
+
+  @ReactMethod
+  fun saveQRCodeToGallery(value: String, width: Int, height: Int, fileName: String, promise: Promise) {
+    try {
+      val bitMatrix: BitMatrix = MultiFormatWriter().encode(value, BarcodeFormat.QR_CODE, width, height)
+      val bitmap = bitMatrixToBitmap(bitMatrix)
+      val uri = saveBitmapToGallery(reactApplicationContext, bitmap, fileName)
+      if (uri != null) {
+        promise.resolve(uri.toString())
+      } else {
+        promise.reject("ERROR", "Failed to save QR code to gallery")
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  @ReactMethod
+  fun saveBarcodeToGallery(value: String, width: Int, height: Int, fileName: String, promise: Promise) {
+    try {
+      val bitMatrix: BitMatrix = MultiFormatWriter().encode(value, BarcodeFormat.CODE_128, width, height)
+      val bitmap = bitMatrixToBitmap(bitMatrix)
+      val uri = saveBitmapToGallery(reactApplicationContext, bitmap, fileName)
+      if (uri != null) {
+        promise.resolve(uri.toString())
+      } else {
+        promise.reject("ERROR", "Failed to save barcode to gallery")
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+  }
+
+  private fun saveBitmapToGallery(context: Context, bitmap: Bitmap, fileName: String): Uri? {
+    val resolver = context.contentResolver
+    val contentValues = ContentValues().apply {
+      put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+      put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+      put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+    }
+
+    val uri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+    uri?.let {
+      resolver.openOutputStream(it)?.use { outputStream ->
+        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {
+          throw IOException("Failed to save bitmap.")
+        }
+      } ?: throw IOException("Failed to get output stream.")
+    }
+    return uri
   }
 
   private fun bitMatrixToBitmap(bitMatrix: BitMatrix): Bitmap {

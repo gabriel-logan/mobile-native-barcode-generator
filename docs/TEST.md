@@ -15,6 +15,8 @@ jest.mock("mobile-native-barcode-generator", () => {
   return {
     generateQRCode: jest.fn().mockResolvedValue("mockedQRCode"),
     generateBarcode: jest.fn().mockResolvedValue("mockedBarcode"),
+    saveBarcodeToGallery: jest.fn().mockResolvedValue("saveBarcodeToGallery"),
+    saveQRCodeToGallery: jest.fn().mockResolvedValue("saveQRCodeToGallery"),
     QRCodeView: () => (
       <>
         <Image source={{ uri: "mockedQRCode" }} />
