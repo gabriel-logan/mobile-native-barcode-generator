@@ -20,9 +20,9 @@ Library to generate barcodes and qr codes natively using Kotlin and Swift, integ
 
 - Android - ✅
 - Ios - ❌
+- Web - ❌
 - Windows - ❌
 - Mac - ❌
-- Linux - ❌
 
 ## Installation
 
