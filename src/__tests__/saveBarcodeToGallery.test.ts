@@ -8,6 +8,7 @@ jest.mock("react-native", () => ({
 	},
 	Platform: {
 		select: jest.fn().mockImplementation((obj) => obj.default),
+		OS: "android",
 	},
 }));
 
