@@ -1,5 +1,5 @@
-import MobileNativeBarcodeGeneratorWeb from "../../web/MobileNativeBarcodeGeneratorWeb";
 import MobileNativeBarcodeGenerator from "../MobileNativeBarcodeGenerator";
+import MobileNativeBarcodeGeneratorWeb from "../web/MobileNativeBarcodeGeneratorWeb";
 
 jest.mock("react-native", () => ({
 	Platform: {

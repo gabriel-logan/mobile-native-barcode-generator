@@ -1,7 +1,7 @@
 import { NativeModules, Platform } from "react-native";
 
-import MobileNativeBarcodeGeneratorWeb from "../web/MobileNativeBarcodeGeneratorWeb";
 import type { MobileNativeBarcodeGeneratorType } from "./types/MobileNativeBarcodeGeneratorType";
+import MobileNativeBarcodeGeneratorWeb from "./web/MobileNativeBarcodeGeneratorWeb";
 
 let MobileNativeBarcodeGenerator: MobileNativeBarcodeGeneratorType;
 
