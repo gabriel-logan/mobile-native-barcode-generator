@@ -33,7 +33,11 @@ export default class MobileNativeBarcodeGeneratorWeb {
 		ctx.putImageData(imageData, 0, 0);
 
 		// Convert the canvas to a Base64 string
-		return canvas.toDataURL();
+		const canvasResult = canvas.toDataURL();
+
+		const cleanResult = canvasResult.replace("data:image/png;base64,", "");
+
+		return cleanResult;
 	}
 
 	async generateQRCode(value: string, width: number, height: number) {
@@ -63,7 +67,11 @@ export default class MobileNativeBarcodeGeneratorWeb {
 		ctx.putImageData(imageData, 0, 0);
 
 		// Convert the canvas to a Base64 string
-		return canvas.toDataURL();
+		const canvasResult = canvas.toDataURL();
+
+		const cleanResult = canvasResult.replace("data:image/png;base64,", "");
+
+		return cleanResult;
 	}
 
 	async saveQRCodeToGallery(
