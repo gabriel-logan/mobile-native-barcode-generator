@@ -7,4 +7,5 @@ ios/build/
 ios/generated/
 *.xcuserstate
 .DS_Store
-
+dist/
+types/

@@ -1,5 +1,5 @@
 import {ensureGalleryPermission} from './internal/galleryPermission';
-import {validateFileName, validateQRCodeInput} from './internal/validation';
+import {validateFileName, validateSaveInput} from './internal/validation';
 import NativeBarcodeGenerator from './specs/NativeMobileNativeBarcodeGenerator';
 
 export default async function saveQRCodeToGallery(
@@ -8,7 +8,7 @@ export default async function saveQRCodeToGallery(
   height: number,
   fileName: string,
 ): Promise<string> {
-  validateQRCodeInput(value, width, height);
+  validateSaveInput(value, width, height);
   validateFileName(fileName);
 
   await ensureGalleryPermission();

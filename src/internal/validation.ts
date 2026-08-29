@@ -2,11 +2,13 @@ const MAX_BARCODE_LENGTH = 80;
 const MAX_QR_CODE_LENGTH = 2500;
 const MAX_IMAGE_DIMENSION = 4096;
 
-function validateValue(value: string, maximumLength: number, label: string) {
+function validateValue(value: string) {
   if (value.length === 0) {
     throw new Error('Value cannot be empty');
   }
+}
 
+function validateLength(value: string, maximumLength: number, label: string) {
   if (value.length > maximumLength) {
     throw new Error(`${label} value length must be less than ${maximumLength} characters`);
   }
@@ -27,7 +29,8 @@ export function validateBarcodeInput(
   width: number,
   height: number,
 ) {
-  validateValue(value, MAX_BARCODE_LENGTH, 'Barcode');
+  validateValue(value);
+  validateLength(value, MAX_BARCODE_LENGTH, 'Barcode');
   validateDimension(width, 'Width');
   validateDimension(height, 'Height');
 }
@@ -37,7 +40,18 @@ export function validateQRCodeInput(
   width: number,
   height: number,
 ) {
-  validateValue(value, MAX_QR_CODE_LENGTH, 'QR code');
+  validateValue(value);
+  validateLength(value, MAX_QR_CODE_LENGTH, 'QR code');
+  validateDimension(width, 'Width');
+  validateDimension(height, 'Height');
+}
+
+export function validateSaveInput(
+  value: string,
+  width: number,
+  height: number,
+) {
+  validateValue(value);
   validateDimension(width, 'Width');
   validateDimension(height, 'Height');
 }

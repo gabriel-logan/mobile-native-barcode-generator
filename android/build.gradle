@@ -41,7 +41,7 @@ dependencies {
 }
 
 react {
-  jsRootDir = file("../src")
+  jsRootDir = file("../types/codegen")
   libraryName = "RNMobileNativeBarcodeGeneratorSpec"
   codegenJavaPackageName = "com.mobilenativebarcodegenerator"
 }

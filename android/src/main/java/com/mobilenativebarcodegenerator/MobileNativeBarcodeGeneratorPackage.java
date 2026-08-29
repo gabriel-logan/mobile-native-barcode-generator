@@ -12,6 +12,7 @@ import java.util.List;
  * Lets React Native autolinking discover the Android project. The actual
  * TurboModule implementation is registered and instantiated from C++.
  */
+@SuppressWarnings({"deprecation", "rawtypes"})
 public final class MobileNativeBarcodeGeneratorPackage implements ReactPackage {
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext context) {
@@ -19,7 +20,7 @@ public final class MobileNativeBarcodeGeneratorPackage implements ReactPackage {
   }
 
   @Override
-  public List<ViewManager<?, ?>> createViewManagers(ReactApplicationContext context) {
+  public List<ViewManager> createViewManagers(ReactApplicationContext context) {
     return Collections.emptyList();
   }
 }
