@@ -9,6 +9,7 @@
     "module": "Node16",
     "moduleResolution": "Node16",
     "outDir": "dist",
+    "rootDir": "src",
     "declaration": true,
     "declarationDir": "types",
     "noFallthroughCasesInSwitch": true,
