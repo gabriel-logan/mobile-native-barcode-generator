@@ -1,0 +1,10 @@
+node_modules/
+build/
+android/.cxx/
+android/build/
+android/generated/
+ios/build/
+ios/generated/
+*.xcuserstate
+.DS_Store
+

@@ -1,0 +1,88 @@
+{
+  "name": "mobile-native-barcode-generator",
+  "version": "0.0.7",
+  "description": "Cross-platform React Native barcode and QR code generation implemented in C++.",
+  "source": "./src/index.ts",
+  "main": "./src/index.ts",
+  "react-native": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "react-native": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": [
+    "android",
+    "cpp",
+    "ios",
+    "src",
+    "CMakeLists.txt",
+    "LICENSE",
+    "mobile-native-barcode-generator.podspec",
+    "react-native.config.js"
+  ],
+  "scripts": {
+    "build:cpp": "cmake -S . -B build/cpp -DMNBG_BUILD_TESTS=ON && cmake --build build/cpp",
+    "codegen": "react-native codegen --path . --platform all --source library",
+    "test": "pnpm run test:cpp && pnpm run typecheck",
+    "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react-native",
+    "android",
+    "ios",
+    "c++",
+    "barcode",
+    "qr-code",
+    "code-128",
+    "turbo-module"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriel-logan/mobile-native-barcode-generator.git"
+  },
+  "author": "Gabriel Logan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabriel-logan/mobile-native-barcode-generator/issues"
+  },
+  "homepage": "https://github.com/gabriel-logan/mobile-native-barcode-generator#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "react": ">=18.3.1",
+    "react-native": ">=0.76.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "react": "19.2.3",
+    "react-native": "0.87.0",
+    "typescript": "^5.9.0"
+  },
+  "codegenConfig": {
+    "name": "RNMobileNativeBarcodeGeneratorSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/specs",
+    "outputDir": {
+      "android": "android/generated",
+      "ios": "ios/generated"
+    },
+    "android": {
+      "javaPackageName": "com.mobilenativebarcodegenerator"
+    },
+    "ios": {
+      "modulesProvider": {
+        "NativeMobileNativeBarcodeGenerator": "MobileNativeBarcodeGeneratorModuleProvider"
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.28.2"
+}
