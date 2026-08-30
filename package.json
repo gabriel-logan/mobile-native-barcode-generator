@@ -1,6 +1,6 @@
 {
   "name": "mobile-native-barcode-generator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Cross-platform React Native barcode and QR code generation implemented in C++.",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
