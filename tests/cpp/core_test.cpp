@@ -184,6 +184,8 @@ void testGeneratorValidation() {
   requireThrows<std::logic_error>(
       [] {
         static_cast<void>(mnbg::generatePng(
+            // Exercise the defensive fallback for values outside the public enum.
+            // NOLINTNEXTLINE(clang-analyzer-optin.core.EnumCastOutOfRange)
             static_cast<mnbg::Symbology>(99), "value", 100, 100));
       },
       "Generator accepted an unsupported symbology");
