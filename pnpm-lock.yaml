@@ -14,6 +14,9 @@ importers:
       '@react-native-community/cli':
         specifier: ^20.0.0
         version: 20.2.0(typescript@5.9.3)
+      '@react-native/gradle-plugin':
+        specifier: ^0.87.1
+        version: 0.87.1
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.18
@@ -316,6 +319,10 @@ packages:
 
   '@react-native/gradle-plugin@0.87.0':
     resolution: {integrity: sha512-CFOhPsxN4yS6vYjShSGKQiJHDPQFKmbiJG17zZfJuHTvJiaWz7JkpznE/P1RRKXdgvCmACrj31vxJiCHLlI7Gg==}
+    engines: {node: ^22.13.0 || ^24.3.0 || >= 26.0.0}
+
+  '@react-native/gradle-plugin@0.87.1':
+    resolution: {integrity: sha512-bZ5X2BNxaSlfp2KlDtUM910QqW9G1yTIeZXghuv4ag8SAQLzm5Mf9j5GjJfT6ax2Qo2aRT15Vi3Tro/yLGJstA==}
     engines: {node: ^22.13.0 || ^24.3.0 || >= 26.0.0}
 
   '@react-native/normalize-colors@0.87.0':
@@ -3055,6 +3062,8 @@ snapshots:
       - utf-8-validate
 
   '@react-native/gradle-plugin@0.87.0': {}
+
+  '@react-native/gradle-plugin@0.87.1': {}
 
   '@react-native/normalize-colors@0.87.0': {}
 
