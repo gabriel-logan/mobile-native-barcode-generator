@@ -1,0 +1,77 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  # Required by `npm publish --provenance`.
+  id-token: write
+
+jobs:
+  publish:
+    name: Build, test and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/mobile-native-barcode-generator
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      # `registry-url` writes the .npmrc that makes `npm publish` read
+      # NODE_AUTH_TOKEN in the last step.
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The release tag drives the published version, so a mismatch with
+      # package.json must stop the publish instead of shipping the wrong one.
+      - name: Check the version against the release tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          TAG_VERSION="${TAG#v}"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+
+          echo "Release tag:  ${TAG_VERSION}"
+          echo "package.json: ${PKG_VERSION}"
+
+          if [ "${TAG_VERSION}" != "${PKG_VERSION}" ]; then
+            echo "::error::Release tag ${TAG_VERSION} does not match package.json ${PKG_VERSION}"
+            exit 1
+          fi
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      # Everything above runs through pnpm; only the publish itself uses npm.
+      # `prepack` (pnpm run build) runs once more here, on the exact tree that
+      # gets packed. Drop `--provenance` if the package or the repository is
+      # ever made private: provenance requires a public package.
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_SECRET }}
