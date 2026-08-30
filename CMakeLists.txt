@@ -47,5 +47,21 @@ else()
     target_compile_features(mnbg_core_tests PRIVATE cxx_std_20)
     target_compile_options(mnbg_core_tests PRIVATE -Wall -Wextra -Wpedantic)
     add_test(NAME mnbg_core_tests COMMAND mnbg_core_tests)
+
+    if(APPLE)
+      enable_language(OBJCXX)
+      add_executable(mnbg_ios_tests
+        tests/ios/gallery_saver_utils_test.mm
+        ios/GallerySaverUtils.mm
+      )
+      target_include_directories(mnbg_ios_tests PRIVATE ios)
+      set_target_properties(mnbg_ios_tests PROPERTIES
+        OBJCXX_STANDARD 20
+        OBJCXX_STANDARD_REQUIRED YES
+        OBJCXX_EXTENSIONS NO
+      )
+      target_compile_options(mnbg_ios_tests PRIVATE -Wall -Wextra -Wpedantic)
+      add_test(NAME mnbg_ios_tests COMMAND mnbg_ios_tests)
+    endif()
   endif()
 endif()

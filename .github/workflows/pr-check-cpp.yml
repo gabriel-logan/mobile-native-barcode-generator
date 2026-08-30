@@ -7,6 +7,7 @@ on:
       - "cpp/**"
       - "ios/**"
       - "tests/cpp/**"
+      - "tests/ios/**"
       - "CMakeLists.txt"
       - ".clang-format"
       - ".clang-tidy"
@@ -17,6 +18,7 @@ on:
       - "cpp/**"
       - "ios/**"
       - "tests/cpp/**"
+      - "tests/ios/**"
       - "CMakeLists.txt"
       - ".clang-format"
       - ".clang-tidy"
@@ -80,7 +82,7 @@ jobs:
             -DCMAKE_CXX_FLAGS="-Werror"
 
       - name: Check the formatting
-        run: clang-format -i $(git ls-files 'cpp/*' 'ios/*' 'tests/cpp/*')
+        run: clang-format -i $(git ls-files 'cpp/*' 'ios/*' 'tests/cpp/*' 'tests/ios/*')
 
       # Only the portable core: the other sources need generated codegen
       # headers or the NDK, which clang-tidy has no way to resolve here.

@@ -50,17 +50,33 @@ Type-check the library:
 pnpm typecheck
 ```
 
+Run the TypeScript unit tests with Vitest:
+
+```sh
+pnpm test:ts
+```
+
 Build and run the C++ core tests:
 
 ```sh
 pnpm test:cpp
 ```
 
-Run everything (C++ tests plus type checking):
+Run the portable suites (TypeScript and C++ tests plus type checking):
 
 ```sh
 pnpm test
 ```
+
+The platform glue has dedicated commands. Android's dependency-free Java
+harness needs JDK 17; Objective-C++ tests run only on macOS:
+
+```sh
+pnpm test:android
+pnpm test:ios
+```
+
+None of these commands runs anything under `example/`.
 
 ### Linting and formatting
 
@@ -89,7 +105,10 @@ npm run lint
 npm test
 ```
 
-Remember to add tests for your change if possible: C++ changes belong in `tests/cpp/core_test.cpp`, JavaScript-visible behaviour in `example/__tests__/`.
+Remember to add tests for your change if possible: C++ changes belong in
+`tests/cpp/core_test.cpp`, TypeScript behavior in `tests/typescript/`, Android
+Java behavior in `android/src/test/java/`, and Objective-C++ behavior in
+`tests/ios/`.
 
 ## Continuous integration
 
@@ -150,7 +169,10 @@ The `package.json` file contains various scripts for common tasks:
 - `pnpm build:cpp`: configure and build the C++ core (with tests).
 - `pnpm typecheck`: type-check files with TypeScript.
 - `pnpm test:cpp`: build and run the C++ core tests with CTest.
-- `pnpm test`: run the C++ tests and the type check.
+- `pnpm test`: run the TypeScript and C++ tests plus the type check.
+- `pnpm test:ts`: run the TypeScript unit tests with Vitest.
+- `pnpm test:android`: run the dependency-free Java unit-test harness.
+- `pnpm test:ios`: run the Objective-C++ unit tests on macOS.
 - `pnpm codegen`: regenerate the React Native codegen artifacts.
 
 ## Sending a pull request

@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "android/**"
+      - "tests/java/**"
+      - "scripts/run-java-unit-tests.js"
       - "build.gradle"
       - "cpp/**"
       - "CMakeLists.txt"
@@ -20,6 +22,8 @@ on:
     branches: [main]
     paths:
       - "android/**"
+      - "tests/java/**"
+      - "scripts/run-java-unit-tests.js"
       - "build.gradle"
       - "cpp/**"
       - "CMakeLists.txt"
@@ -94,6 +98,9 @@ jobs:
 
       - name: Lint
         run: gradle -p android --include-build "$PWD/node_modules/@react-native/gradle-plugin" lint
+
+      - name: Run Java unit tests
+        run: pnpm test:android
 
       - name: Install the example dependencies
         working-directory: example

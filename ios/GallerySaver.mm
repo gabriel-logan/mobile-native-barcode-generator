@@ -2,8 +2,8 @@
 #import <Photos/Photos.h>
 
 #include "../cpp/platform/GallerySaver.h"
+#include "GallerySaverUtils.h"
 
-#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -52,17 +52,6 @@ PHAuthorizationStatus requestPhotoAuthorization() {
   return requestedStatus;
 }
 
-std::string normalizedFileName(std::string fileName) {
-  std::replace(fileName.begin(), fileName.end(), '/', '_');
-  std::replace(fileName.begin(), fileName.end(), '\\', '_');
-
-  if (fileName.size() < 4 || fileName.substr(fileName.size() - 4) != ".png") {
-    fileName += ".png";
-  }
-
-  return fileName;
-}
-
 }  // namespace
 
 std::string savePngToGallery(
@@ -76,7 +65,7 @@ std::string savePngToGallery(
 
     NSData* data = [NSData dataWithBytes:png.data() length:png.size()];
     NSString* fileName = [NSString
-        stringWithUTF8String:normalizedFileName(requestedFileName).c_str()];
+        stringWithUTF8String:normalizeGalleryFileName(requestedFileName).c_str()];
     __block NSString* localIdentifier = nil;
     NSError* error = nil;
 

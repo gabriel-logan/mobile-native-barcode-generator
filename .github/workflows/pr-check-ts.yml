@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "tests/typescript/**"
+      - "vitest.config.mts"
       - "scripts/**"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -15,6 +17,8 @@ on:
     branches: [main]
     paths:
       - "src/**"
+      - "tests/typescript/**"
+      - "vitest.config.mts"
       - "scripts/**"
       - "package.json"
       - "pnpm-lock.yaml"
@@ -61,6 +65,9 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test:ts
 
       - name: Build
         run: pnpm build
