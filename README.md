@@ -342,6 +342,32 @@ appear:
 The authorization prompt is shown on the first save; a denied or restricted
 status makes the call reject.
 
+#### Expo permissions
+
+`expo prebuild` regenerates `AndroidManifest.xml` and `Info.plist`, so edits to
+those files are lost. Declare the same permissions in `app.json` instead:
+
+```json
+{
+  "expo": {
+    "android": {
+      "permissions": ["android.permission.WRITE_EXTERNAL_STORAGE"]
+    },
+    "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "Save the generated barcodes to your photo library."
+      }
+    }
+  }
+}
+```
+
+`android.permissions` cannot express the `maxSdkVersion="28"` shown above, so
+the permission is declared for every version. That does not change runtime
+behaviour — the library only requests it below API 29 — but it does show up on
+the store listing; narrow it with a config plugin if that matters. You can skip
+the Android entry entirely if your app targets API 29 or above.
+
 ## Test using Jest
 
 The library calls a Turbo Module, and `TurboModuleRegistry.getEnforcing` throws
