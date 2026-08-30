@@ -13,6 +13,10 @@ exposed as a Turbo Module, so Android and iOS produce byte-identical images from
 the same code, with no Kotlin or Swift generation logic and no third-party
 encoding dependency.
 
+On the web that same core is compiled to WebAssembly, so react-native-web builds
+get the same images from the same encoder rather than a separate JavaScript
+implementation.
+
 ## Supported Frameworks
 
 - React Native (New Architecture) - ✅
@@ -22,7 +26,7 @@ encoding dependency.
 
 - Android - ✅
 - iOS - ✅
-- Web - ❌
+- Web - ✅ (react-native-web, via WebAssembly)
 - Windows - ❌
 - Mac - ❌
 
@@ -32,6 +36,7 @@ encoding dependency.
 - React >= 18.3.1
 - Android: minSdk 24, compileSdk 36, Java 17
 - iOS: the minimum version supported by your React Native release, C++20
+- Web: react-native-web and a browser with WebAssembly (every current browser)
 
 ## Installation
 
@@ -54,6 +59,26 @@ cd ios && pod install
 ```
 
 Autolinking handles the rest; there is no manual native setup.
+
+### Web
+
+Nothing extra to install. The package ships a prebuilt WebAssembly module and
+your bundler resolves the `.web.js` platform extension to it, the same way it
+does for your own web-only files.
+
+The wasm binary is embedded in the JavaScript module, so there is no `.wasm`
+asset to copy, serve or configure — it adds roughly 74 KB (about 26 KB gzipped)
+to your bundle and is instantiated lazily on the first generation call.
+
+If your webpack config lists `resolve.extensions` explicitly, make sure the web
+extensions come first:
+
+```js
+resolve: {
+  alias: { 'react-native$': 'react-native-web' },
+  extensions: ['.web.tsx', '.web.ts', '.web.jsx', '.web.js', '.tsx', '.ts', '.jsx', '.js'],
+}
+```
 
 ## Usage
 
@@ -203,6 +228,11 @@ The save functions do not apply the barcode/QR length limits.
 write it to the device gallery. They resolve with the location of the saved
 image: a `content://` URI on Android, a `ph://` asset identifier on iOS.
 
+On the web there is no gallery to write to, so the browser equivalent is used:
+the PNG is offered to the user as a download (the filename gains a `.png`
+extension if it does not have one) and the call resolves with the image as a
+`data:image/png;base64,...` URI.
+
 ```ts
 import {
   saveBarcodeToGallery,
@@ -227,6 +257,12 @@ async function buttonToSaveOnGallery() {
   console.log("Success", `${result1} and ${result2}`);
 }
 ```
+
+#### Web
+
+Browsers gate downloads themselves, so no permission is requested. Saving needs
+a real document, which means it cannot run during server-side rendering — call
+it from an event handler or an effect.
 
 #### Android permissions
 

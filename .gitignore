@@ -10,3 +10,4 @@ ios/generated/
 .DS_Store
 dist/
 types/
+wasm/

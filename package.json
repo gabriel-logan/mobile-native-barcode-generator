@@ -14,6 +14,7 @@
     "ios/GallerySaverUtils.mm",
     "ios/MobileNativeBarcodeGeneratorModuleProvider.h",
     "ios/MobileNativeBarcodeGeneratorModuleProvider.mm",
+    "wasm",
     "types",
     "CMakeLists.txt",
     "LICENSE",
@@ -23,17 +24,18 @@
   "scripts": {
     "build": "tsc --build --clean && tsc && node scripts/copy-codegen-spec.js",
     "build:cpp": "cmake -S . -B build/cpp -DMNBG_BUILD_TESTS=ON && cmake --build build/cpp",
+    "build:wasm": "node scripts/build-wasm.js",
     "codegen": "pnpm run build && react-native codegen --path . --platform all --source library",
-    "prepack": "pnpm run build",
-    "test": "pnpm run test:ts && pnpm run test:cpp && pnpm run typecheck",
+    "prepack": "pnpm run build:wasm && pnpm run build",
+    "test": "pnpm run build:wasm && pnpm run test:ts && pnpm run test:cpp && pnpm run typecheck",
     "test:android": "node scripts/run-java-unit-tests.js",
     "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
     "test:ios": "cmake -S . -B build/ios-tests -DMNBG_BUILD_TESTS=ON && cmake --build build/ios-tests --target mnbg_ios_tests && ctest --test-dir build/ios-tests -R mnbg_ios_tests --output-on-failure",
     "test:ts": "vitest run --config vitest.config.mts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/*",
-    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/*",
+    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/* !wasm/**/*",
+    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/* !wasm/**/*",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -44,7 +46,9 @@
     "barcode",
     "qr-code",
     "code-128",
-    "turbo-module"
+    "turbo-module",
+    "web",
+    "webassembly"
   ],
   "repository": {
     "type": "git",

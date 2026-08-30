@@ -66,6 +66,11 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # `wasm/mnbg-wasm.js` is generated, not tracked; `test:ts` exercises it
+      # and `pnpm pack` publishes it.
+      - name: Build the WebAssembly artifact
+        run: pnpm run build:wasm
+
       - name: Test
         run: pnpm test:ts
 

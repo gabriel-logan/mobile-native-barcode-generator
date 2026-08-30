@@ -1,0 +1,109 @@
+name: PR Check Web
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "cpp/**"
+      - "wasm/**"
+      - "src/**"
+      - "tests/typescript/**"
+      - "scripts/build-wasm.js"
+      - "CMakeLists.txt"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/webpack.config.js"
+      - "example/index.web.js"
+      - "example/App.tsx"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-web.yml"
+  push:
+    branches: [main]
+    paths:
+      - "cpp/**"
+      - "wasm/**"
+      - "src/**"
+      - "tests/typescript/**"
+      - "scripts/build-wasm.js"
+      - "CMakeLists.txt"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/webpack.config.js"
+      - "example/index.web.js"
+      - "example/App.tsx"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-web.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  wasm:
+    name: Build and test the WebAssembly module
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the WebAssembly artifact
+        run: pnpm run build:wasm
+
+      - name: Test the web module against the artifact
+        run: pnpm run test:ts
+
+  bundle:
+    name: Bundle the example app for the web
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Install the library dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the library
+        run: pnpm run build:wasm && pnpm build
+
+      - name: Install the example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Build the web bundle
+        working-directory: example
+        run: npm run build:web

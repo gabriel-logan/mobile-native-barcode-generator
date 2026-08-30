@@ -11,7 +11,44 @@ set(MNBG_CORE_SOURCES
   cpp/core/QrCodeEncoder.cpp
 )
 
-if(ANDROID)
+if(EMSCRIPTEN)
+  # `pnpm run build:wasm` drives this branch through emcmake; the artifact is a
+  # single self-contained CommonJS file (the wasm binary is embedded) so that
+  # consumers do not have to teach their bundler how to ship a .wasm asset.
+  add_executable(mnbg_wasm
+    ${MNBG_CORE_SOURCES}
+    cpp/wasm/WasmBindings.cpp
+  )
+
+  target_include_directories(mnbg_wasm PRIVATE cpp)
+  target_compile_features(mnbg_wasm PRIVATE cxx_std_20)
+  target_compile_options(mnbg_wasm PRIVATE -Oz -fexceptions -Wall -Wextra -Wpedantic)
+
+  set_target_properties(mnbg_wasm PROPERTIES
+    OUTPUT_NAME "mnbg-wasm"
+    SUFFIX ".js"
+  )
+
+  target_link_options(mnbg_wasm PRIVATE
+    -Oz
+    -fexceptions
+    --bind
+    --no-entry
+    -sSINGLE_FILE=1
+    -sMODULARIZE=1
+    -sEXPORT_NAME=createMnbgWasmModule
+    # Browser-only glue: the node branch would `require("node:fs")`, which
+    # web bundlers refuse to resolve. SINGLE_FILE needs no file access, so
+    # the artifact still runs under Node (SSR, tests) without that branch.
+    -sENVIRONMENT=web,worker
+    -sALLOW_MEMORY_GROWTH=1
+    -sFILESYSTEM=0
+    -sINCOMING_MODULE_JS_API=[]
+    -sEXPORTED_RUNTIME_METHODS=[]
+    # Emits mnbg-wasm.d.ts next to the module, from the embind bindings.
+    --emit-tsd mnbg-wasm.d.ts
+  )
+elseif(ANDROID)
   add_library(mobile_native_barcode_generator STATIC
     ${MNBG_CORE_SOURCES}
     cpp/NativeMobileNativeBarcodeGenerator.cpp
