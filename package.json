@@ -1,61 +1,41 @@
 {
   "name": "mobile-native-barcode-generator",
-  "version": "0.0.7",
-  "description": "Library to generate barcodes and qr codes natively using Kotlin and Swift, integrated with react native.",
-  "source": "./src/index.tsx",
-  "main": "./lib/commonjs/index.js",
-  "module": "./lib/module/index.js",
-  "types": "./lib/typescript/commonjs/src/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./lib/typescript/module/src/index.d.ts",
-        "default": "./lib/module/index.js"
-      },
-      "require": {
-        "types": "./lib/typescript/commonjs/src/index.d.ts",
-        "default": "./lib/commonjs/index.js"
-      }
-    }
-  },
+  "version": "1.0.0",
+  "description": "Cross-platform React Native barcode and QR code generation implemented in C++.",
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "files": [
-    "lib",
-    "android",
-    "ios",
+    "android/build.gradle",
+    "android/src",
     "cpp",
-    "*.podspec",
-    "!ios/build",
-    "!android/build",
-    "!android/gradle",
-    "!android/gradlew",
-    "!android/gradlew.bat",
-    "!android/local.properties",
-    "!**/__tests__",
-    "!**/__fixtures__",
-    "!**/__mocks__",
-    "!**/.*"
+    "dist",
+    "ios/GallerySaver.mm",
+    "ios/MobileNativeBarcodeGeneratorModuleProvider.h",
+    "ios/MobileNativeBarcodeGeneratorModuleProvider.mm",
+    "types",
+    "CMakeLists.txt",
+    "LICENSE",
+    "mobile-native-barcode-generator.podspec",
+    "react-native.config.js"
   ],
   "scripts": {
-    "example": "yarn workspace mobile-native-barcode-generator-example",
-    "typecheck": "tsc",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
-    "release": "release-it",
-    "test": "jest --verbose",
-    "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
-    "test:verbose:coverege": "jest --coverage --verbose"
+    "build": "tsc --build --clean && tsc && node scripts/copy-codegen-spec.js",
+    "build:cpp": "cmake -S . -B build/cpp -DMNBG_BUILD_TESTS=ON && cmake --build build/cpp",
+    "codegen": "pnpm run build && react-native codegen --path . --platform all --source library",
+    "prepack": "pnpm run build",
+    "test": "pnpm run test:cpp && pnpm run typecheck",
+    "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "react-native",
-    "ios",
     "android",
+    "ios",
+    "c++",
     "barcode",
     "qr-code",
-    "barcode-generator",
-    "qr-code-generator",
-    "mobile-native-barcode-generator"
+    "code-128",
+    "turbo-module"
   ],
   "repository": {
     "type": "git",
@@ -70,139 +50,33 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "devDependencies": {
-    "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.5.0",
-    "@react-native/eslint-config": "^0.75.2",
-    "@release-it/conventional-changelog": "^5.0.0",
-    "@testing-library/react-native": "^12.6.1",
-    "@types/jest": "^29.5.5",
-    "@types/react": "^18.2.44",
-    "@zxing/library": "^0.21.3",
-    "canvas": "^2.11.2",
-    "commitlint": "^17.0.2",
-    "del-cli": "^5.1.0",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-config-universe": "^13.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-testing-library": "^6.3.0",
-    "jest": "^29.7.0",
-    "prettier": "^3.0.3",
-    "react": "18.3.1",
-    "react-native": "0.75.2",
-    "react-native-builder-bob": "^0.30.0",
-    "react-test-renderer": "^18.3.1",
-    "release-it": "^15.0.0",
-    "turbo": "^1.10.7",
-    "typescript": "^5.2.2"
-  },
-  "resolutions": {
-    "@types/react": "^18.2.44"
-  },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": ">=18.3.1",
+    "react-native": ">=0.76.0"
   },
-  "workspaces": [
-    "example"
-  ],
-  "packageManager": "yarn@4.4.1",
-  "jest": {
-    "preset": "react-native",
-    "modulePathIgnorePatterns": [
-      "<rootDir>/example/node_modules",
-      "<rootDir>/lib/"
-    ],
-    "setupFilesAfterEnv": [
-      "@testing-library/react-native/extend-expect"
-    ]
+  "devDependencies": {
+    "@react-native-community/cli": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "react": "19.2.3",
+    "react-native": "0.87.0",
+    "typescript": "^5.9.0"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
+  "codegenConfig": {
+    "name": "RNMobileNativeBarcodeGeneratorSpec",
+    "type": "modules",
+    "jsSrcsDir": "types/codegen",
+    "outputDir": {
+      "android": "android/generated",
+      "ios": "ios/generated"
     },
-    "increment": "patch",
-    "npm": {
-      "publish": true
+    "android": {
+      "javaPackageName": "com.mobilenativebarcodegenerator"
     },
-    "github": {
-      "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
+    "ios": {
+      "modulesProvider": {
+        "NativeMobileNativeBarcodeGenerator": "MobileNativeBarcodeGeneratorModuleProvider"
       }
     }
   },
-  "eslintConfig": {
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "project": "tsconfig.json"
-    },
-    "root": true,
-    "extends": [
-      "@react-native",
-      "universe/native"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/**/*.[jt]s?(x)",
-          "**/?(*.)+(spec|test).[jt]s?(x)"
-        ],
-        "extends": [
-          "plugin:testing-library/react"
-        ]
-      }
-    ],
-    "rules": {
-      "react-hooks/exhaustive-deps": "error",
-      "react/react-in-jsx-scope": "off",
-      "no-console": "warn",
-      "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/consistent-type-exports": "error"
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/",
-    "coverage/"
-  ],
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      [
-        "commonjs",
-        {
-          "esm": true
-        }
-      ],
-      [
-        "module",
-        {
-          "esm": true
-        }
-      ],
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json",
-          "esm": true
-        }
-      ]
-    ]
-  },
-  "create-react-native-library": {
-    "type": "module-legacy",
-    "languages": "kotlin-swift",
-    "version": "0.41.0"
-  }
+  "packageManager": "pnpm@10.28.2"
 }

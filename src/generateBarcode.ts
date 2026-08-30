@@ -1,21 +1,16 @@
-import MobileNativeBarcodeGenerator from "./MobileNativeBarcodeGenerator";
+import NativeBarcodeGenerator from './specs/NativeMobileNativeBarcodeGenerator';
+import {validateBarcodeInput} from './internal/validation';
+
+const PNG_DATA_URI_PREFIX = 'data:image/png;base64,';
 
 export default async function generateBarcode(
-	value: string,
-	width: number,
-	height: number,
+  value: string,
+  width: number,
+  height: number,
 ): Promise<string> {
-	if (value.length > 80) {
-		throw new Error("Barcode value length must be less than 80 characters");
-	}
+  validateBarcodeInput(value, width, height);
 
-	const returnValue = await MobileNativeBarcodeGenerator.generateBarcode(
-		value,
-		width,
-		height,
-	);
+  const base64 = NativeBarcodeGenerator.generateBarcode(value, width, height);
 
-	const finalReturn = `data:image/png;base64,${returnValue}`;
-
-	return finalReturn;
+  return `${PNG_DATA_URI_PREFIX}${base64}`;
 }

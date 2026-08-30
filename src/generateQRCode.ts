@@ -1,21 +1,16 @@
-import MobileNativeBarcodeGenerator from "./MobileNativeBarcodeGenerator";
+import NativeBarcodeGenerator from './specs/NativeMobileNativeBarcodeGenerator';
+import {validateQRCodeInput} from './internal/validation';
+
+const PNG_DATA_URI_PREFIX = 'data:image/png;base64,';
 
 export default async function generateQRCode(
-	value: string,
-	width: number,
-	height: number,
+  value: string,
+  width: number,
+  height: number,
 ): Promise<string> {
-	if (value.length > 2500) {
-		throw new Error("QR code value length must be less than 2500 characters");
-	}
+  validateQRCodeInput(value, width, height);
 
-	const returnValue = await MobileNativeBarcodeGenerator.generateQRCode(
-		value,
-		width,
-		height,
-	);
+  const base64 = NativeBarcodeGenerator.generateQRCode(value, width, height);
 
-	const finalReturn = `data:image/png;base64,${returnValue}`;
-
-	return finalReturn;
+  return `${PNG_DATA_URI_PREFIX}${base64}`;
 }

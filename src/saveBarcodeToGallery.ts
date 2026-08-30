@@ -1,34 +1,22 @@
-import MobileNativeBarcodeGenerator from "./MobileNativeBarcodeGenerator";
+import {ensureGalleryPermission} from './internal/galleryPermission';
+import {validateFileName, validateSaveInput} from './internal/validation';
+import NativeBarcodeGenerator from './specs/NativeMobileNativeBarcodeGenerator';
 
 export default async function saveBarcodeToGallery(
-	value: string,
-	width: number,
-	height: number,
-	fileName: string,
-) {
-	if (value === "") {
-		throw new Error("Value cannot be empty");
-	}
+  value: string,
+  width: number,
+  height: number,
+  fileName: string,
+): Promise<string> {
+  validateSaveInput(value, width, height);
+  validateFileName(fileName);
 
-	if (width <= 0 || typeof width !== "number") {
-		throw new Error("Width must be a positive number");
-	}
+  await ensureGalleryPermission();
 
-	if (height <= 0 || typeof height !== "number") {
-		throw new Error("Height must be a positive number");
-	}
-
-	if (fileName.trim() === "") {
-		throw new Error("Filename cannot be empty");
-	}
-
-	const result: string =
-		await MobileNativeBarcodeGenerator.saveBarcodeToGallery(
-			value,
-			width,
-			height,
-			fileName,
-		);
-
-	return result;
+  return NativeBarcodeGenerator.saveBarcodeToGallery(
+    value,
+    width,
+    height,
+    fileName,
+  );
 }
