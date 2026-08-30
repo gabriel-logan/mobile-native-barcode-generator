@@ -62,9 +62,13 @@ jobs:
         with:
           cache: true
 
+      # `ruby-version` must be explicit: without it the action reads
+      # `.ruby-version` (absent here) and then the Gemfile's `ruby ">= 2.6.10"`,
+      # which is a range it cannot resolve to a concrete version.
       - name: Setup Ruby and CocoaPods
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: "3.4"
           working-directory: example
           bundler-cache: true
 
