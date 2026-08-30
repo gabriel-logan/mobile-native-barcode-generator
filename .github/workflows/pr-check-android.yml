@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "android/**"
+      - "build.gradle"
       - "cpp/**"
       - "CMakeLists.txt"
       - "react-native.config.js"
@@ -19,6 +20,7 @@ on:
     branches: [main]
     paths:
       - "android/**"
+      - "build.gradle"
       - "cpp/**"
       - "CMakeLists.txt"
       - "react-native.config.js"
@@ -74,6 +76,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
         with:
           build-root-directory: example/android
+          gradle-version: "9.4.1"
+
+      - name: Check the formatting
+        run: gradle spotlessCheck
 
       - name: Install the NDK
         run: |
@@ -85,6 +91,9 @@ jobs:
 
       - name: Build the library
         run: pnpm build
+
+      - name: Lint
+        run: gradle -p android --include-build "$PWD/node_modules/@react-native/gradle-plugin" lint
 
       - name: Install the example dependencies
         working-directory: example

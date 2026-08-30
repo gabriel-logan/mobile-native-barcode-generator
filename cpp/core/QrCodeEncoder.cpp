@@ -24,10 +24,7 @@ constexpr std::array<int, 41> errorCorrectionBlocks = {
 
 constexpr int finderPenalty = 40;
 
-void appendBits(
-    std::vector<bool>& output,
-    std::uint32_t value,
-    int bitCount) {
+void appendBits(std::vector<bool>& output, std::uint32_t value, int bitCount) {
   if (bitCount < 0 || bitCount > 31 ||
       (bitCount < 31 && value >> bitCount != 0)) {
     throw std::invalid_argument("Bit value does not fit requested length");
@@ -83,8 +80,7 @@ std::uint8_t reedSolomonMultiply(std::uint8_t left, std::uint8_t right) {
   std::uint8_t result = 0;
 
   for (int bit = 7; bit >= 0; --bit) {
-    result = static_cast<std::uint8_t>(
-        (result << 1) ^ ((result >> 7) * 0x1D));
+    result = static_cast<std::uint8_t>((result << 1) ^ ((result >> 7) * 0x1D));
     result ^= static_cast<std::uint8_t>(((right >> bit) & 1U) * left);
   }
 
@@ -124,8 +120,7 @@ std::vector<std::uint8_t> makeReedSolomonRemainder(
     result.back() = 0;
 
     for (std::size_t index = 0; index < result.size(); ++index) {
-      result[index] ^=
-          reedSolomonMultiply(divisor[index], factor);
+      result[index] ^= reedSolomonMultiply(divisor[index], factor);
     }
   }
 
@@ -137,14 +132,12 @@ std::vector<std::uint8_t> addErrorCorrection(
     int version) {
   const int blockCount =
       errorCorrectionBlocks[static_cast<std::size_t>(version)];
-  const int eccLength =
-      eccCodewordsPerBlock[static_cast<std::size_t>(version)];
+  const int eccLength = eccCodewordsPerBlock[static_cast<std::size_t>(version)];
   const int rawCodewordCount = rawDataModules(version) / 8;
   const int shortBlockCount = blockCount - rawCodewordCount % blockCount;
   const int shortBlockLength = rawCodewordCount / blockCount;
   const int shortDataLength = shortBlockLength - eccLength;
-  const std::vector<std::uint8_t> divisor =
-      makeReedSolomonDivisor(eccLength);
+  const std::vector<std::uint8_t> divisor = makeReedSolomonDivisor(eccLength);
 
   std::vector<std::vector<std::uint8_t>> dataBlocks;
   std::vector<std::vector<std::uint8_t>> eccBlocks;
@@ -161,8 +154,7 @@ std::vector<std::uint8_t> addErrorCorrection(
     dataBlocks.emplace_back(
         data.begin() + static_cast<std::ptrdiff_t>(offset),
         data.begin() + static_cast<std::ptrdiff_t>(blockEnd));
-    eccBlocks.push_back(
-        makeReedSolomonRemainder(dataBlocks.back(), divisor));
+    eccBlocks.push_back(makeReedSolomonRemainder(dataBlocks.back(), divisor));
     offset = blockEnd;
   }
 
@@ -206,7 +198,8 @@ std::vector<std::uint8_t> makeDataCodewords(
 
   const std::size_t capacity =
       static_cast<std::size_t>(dataCodewords(version)) * 8;
-  const std::size_t terminator = std::min<std::size_t>(4, capacity - bits.size());
+  const std::size_t terminator =
+      std::min<std::size_t>(4, capacity - bits.size());
   bits.insert(bits.end(), terminator, false);
 
   while (bits.size() % 8 != 0) {
@@ -221,7 +214,8 @@ std::vector<std::uint8_t> makeDataCodewords(
 
     for (int bit = 0; bit < 8; ++bit) {
       valueByte = static_cast<std::uint8_t>(
-          (valueByte << 1) | (bits[offset + static_cast<std::size_t>(bit)] ? 1 : 0));
+          (valueByte << 1) |
+          (bits[offset + static_cast<std::size_t>(bit)] ? 1 : 0));
     }
 
     result.push_back(valueByte);
@@ -352,9 +346,7 @@ class QrMatrixBuilder {
     }
 
     const int bits = (data << 10 | remainder) ^ 0x5412;
-    const auto bit = [bits](int index) {
-      return ((bits >> index) & 1) != 0;
-    };
+    const auto bit = [bits](int index) { return ((bits >> index) & 1) != 0; };
 
     for (int index = 0; index <= 5; ++index) {
       setFunctionModule(8, index, bit(index));
@@ -393,8 +385,7 @@ class QrMatrixBuilder {
 
     for (std::size_t y = 0; y < positions.size(); ++y) {
       for (std::size_t x = 0; x < positions.size(); ++x) {
-        const bool overlapsFinder =
-            (x == 0 && y == 0) ||
+        const bool overlapsFinder = (x == 0 && y == 0) ||
             (x == 0 && y == positions.size() - 1) ||
             (x == positions.size() - 1 && y == 0);
 
@@ -417,9 +408,7 @@ class QrMatrixBuilder {
       }
 
       for (int vertical = 0; vertical < size_; ++vertical) {
-        const int y = ((right + 1) & 2) == 0
-            ? size_ - 1 - vertical
-            : vertical;
+        const int y = ((right + 1) & 2) == 0 ? size_ - 1 - vertical : vertical;
 
         for (int column = 0; column < 2; ++column) {
           const int x = right - column;
@@ -477,9 +466,8 @@ class QrMatrixBuilder {
     int window = 0;
 
     for (int index = 0; index < size_; ++index) {
-      const bool dark = horizontal
-          ? modules_.get(index, fixed)
-          : modules_.get(fixed, index);
+      const bool dark =
+          horizontal ? modules_.get(index, fixed) : modules_.get(fixed, index);
 
       if (index == 0 || dark != previous) {
         if (runLength >= 5) {
@@ -553,8 +541,7 @@ BitMatrix encodeQrCode(const std::string& value) {
 
   const int version = chooseVersion(value.size());
   const std::vector<std::uint8_t> data = makeDataCodewords(value, version);
-  const std::vector<std::uint8_t> codewords =
-      addErrorCorrection(data, version);
+  const std::vector<std::uint8_t> codewords = addErrorCorrection(data, version);
 
   return QrMatrixBuilder(version, codewords).takeMatrix();
 }

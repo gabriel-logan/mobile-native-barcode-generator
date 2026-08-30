@@ -5,15 +5,21 @@ on:
     branches: [main]
     paths:
       - "cpp/**"
+      - "ios/**"
       - "tests/cpp/**"
       - "CMakeLists.txt"
+      - ".clang-format"
+      - ".clang-tidy"
       - ".github/workflows/pr-check-cpp.yml"
   push:
     branches: [main]
     paths:
       - "cpp/**"
+      - "ios/**"
       - "tests/cpp/**"
       - "CMakeLists.txt"
+      - ".clang-format"
+      - ".clang-tidy"
       - ".github/workflows/pr-check-cpp.yml"
   workflow_dispatch:
 
@@ -58,7 +64,7 @@ jobs:
         run: ctest --test-dir build/cpp --build-config ${{ matrix.build_type }} --output-on-failure
 
   strict:
-    name: Warnings as errors
+    name: Lint, format and warnings as errors
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -72,6 +78,14 @@ jobs:
             -DMNBG_BUILD_TESTS=ON \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_CXX_FLAGS="-Werror"
+
+      - name: Check the formatting
+        run: clang-format -i $(git ls-files 'cpp/*' 'ios/*' 'tests/cpp/*')
+
+      # Only the portable core: the other sources need generated codegen
+      # headers or the NDK, which clang-tidy has no way to resolve here.
+      - name: Lint
+        run: clang-tidy cpp/core/*.cpp tests/cpp/core_test.cpp -- -std=c++20 -Icpp
 
       - name: Build
         run: cmake --build build/strict --parallel

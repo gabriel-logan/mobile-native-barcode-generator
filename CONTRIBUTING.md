@@ -62,6 +62,25 @@ Run everything (C++ tests plus type checking):
 pnpm test
 ```
 
+### Linting and formatting
+
+Each language uses its own tooling. None of it covers `example/`, which is checked separately.
+
+```sh
+# TypeScript
+pnpm format   # pnpm format:check to verify
+pnpm lint     # pnpm lint:fix to autofix
+
+# C++ and Objective-C++, styled by .clang-format, checked by .clang-tidy
+clang-format -i $(git ls-files 'cpp/*' 'ios/*' 'tests/cpp/*')
+clang-tidy cpp/core/*.cpp tests/cpp/core_test.cpp -- -std=c++20 -Icpp
+
+# Android, needs Gradle and a JDK 17
+gradle spotlessApply   # gradle spotlessCheck to verify
+```
+
+clang-tidy only covers the portable core: the remaining sources need generated codegen headers or the NDK, which it cannot resolve.
+
 The example app has its own linting and Jest suite, including a contract test that pins the public API:
 
 ```sh
@@ -76,13 +95,13 @@ Remember to add tests for your change if possible: C++ changes belong in `tests/
 
 Every pull request against `main` runs one workflow per language, each scoped by path so only the affected checks run:
 
-| Workflow            | File                                     | What it does                                                                                                     |
-| ------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| PR Check C++        | `.github/workflows/pr-check-cpp.yml`     | Builds the core on Linux and macOS in Debug and Release, runs CTest, and rebuilds with `-Werror`.                |
-| PR Check TypeScript | `.github/workflows/pr-check-ts.yml`      | `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`, `pnpm pack` and a codegen run.                 |
-| PR Check Android    | `.github/workflows/pr-check-android.yml` | Validates the Gradle wrapper and assembles the example app (arm64 only), which compiles the C++ through the NDK. |
-| PR Check iOS        | `.github/workflows/pr-check-ios.yml`     | Runs `pod install` and builds the example app for the iOS simulator.                                             |
-| PR Check Example    | `.github/workflows/pr-check-example.yml` | Lints, type-checks and runs the example Jest suite, including the public API contract test.                      |
+| Workflow            | File                                     | What it does                                                                                                                        |
+| ------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| PR Check C++        | `.github/workflows/pr-check-cpp.yml`     | Builds the core on Linux and macOS in Debug and Release, runs CTest, and rebuilds with `-Werror` after clang-format and clang-tidy. |
+| PR Check TypeScript | `.github/workflows/pr-check-ts.yml`      | `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`, `pnpm pack` and a codegen run.                                    |
+| PR Check Android    | `.github/workflows/pr-check-android.yml` | Runs Spotless, validates the Gradle wrapper and assembles the example app (arm64 only), which compiles the C++ through the NDK.     |
+| PR Check iOS        | `.github/workflows/pr-check-ios.yml`     | Runs `pod install` and builds the example app for the iOS simulator.                                                                |
+| PR Check Example    | `.github/workflows/pr-check-example.yml` | Lints, type-checks and runs the example Jest suite, including the public API contract test.                                         |
 
 All of them also run on pushes to `main` and can be started manually from the Actions tab.
 
@@ -109,7 +128,7 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 
 ## Code style
 
-Two spaces for indentation, LF line endings, UTF-8 and a final newline, for both the TypeScript and the C++ sources. Match the surrounding code: single quotes and trailing commas in TypeScript, `#pragma once` headers and the `mnbg` namespace in C++.
+Two spaces for indentation, LF line endings, UTF-8 and a final newline, in every language. The formatters above own the layout, so run them instead of aligning code by hand. Match the surrounding code: single quotes and trailing commas in TypeScript, `#pragma once` headers and the `mnbg` namespace in C++.
 
 ## Publishing to npm
 

@@ -33,11 +33,9 @@ std::vector<std::uint8_t> generatePng(
 
   switch (symbology) {
     case Symbology::code128:
-      return encodeMonochromePng(
-          encodeCode128(value), width, height, 10, 0);
+      return encodeMonochromePng(encodeCode128(value), width, height, 10, 0);
     case Symbology::qrCode:
-      return encodeMonochromePng(
-          encodeQrCode(value), width, height, 4, 4);
+      return encodeMonochromePng(encodeQrCode(value), width, height, 4, 4);
   }
 
   throw std::logic_error("Unsupported barcode symbology");

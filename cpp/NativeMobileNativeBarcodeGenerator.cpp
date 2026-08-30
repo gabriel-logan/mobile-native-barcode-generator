@@ -72,8 +72,7 @@ std::string NativeMobileNativeBarcodeGenerator::saveBarcodeToGallery(
     double width,
     double height,
     std::string fileName) {
-  return saveCode(
-      mnbg::Symbology::code128, value, width, height, fileName);
+  return saveCode(mnbg::Symbology::code128, value, width, height, fileName);
 }
 
 std::string NativeMobileNativeBarcodeGenerator::saveQRCodeToGallery(

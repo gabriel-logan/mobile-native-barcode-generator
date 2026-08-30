@@ -66,7 +66,8 @@ jmethodID requireMethod(
   throwIfJavaException(environment, "resolving a Java method");
 
   if (method == nullptr) {
-    throw std::runtime_error(std::string("Android method was not found: ") + name);
+    throw std::runtime_error(
+        std::string("Android method was not found: ") + name);
   }
 
   return method;
@@ -77,7 +78,8 @@ jclass requireClass(JNIEnv* environment, const char* name) {
   throwIfJavaException(environment, "resolving a Java class");
 
   if (type == nullptr) {
-    throw std::runtime_error(std::string("Android class was not found: ") + name);
+    throw std::runtime_error(
+        std::string("Android class was not found: ") + name);
   }
 
   return type;
@@ -133,7 +135,8 @@ void putInteger(
 }
 
 int androidSdkVersion(JNIEnv* environment) {
-  const jclass versionClass = requireClass(environment, "android/os/Build$VERSION");
+  const jclass versionClass =
+      requireClass(environment, "android/os/Build$VERSION");
   const LocalReference versionClassReference(environment, versionClass);
   const jfieldID sdkField =
       environment->GetStaticFieldID(versionClass, "SDK_INT", "I");
@@ -144,8 +147,7 @@ int androidSdkVersion(JNIEnv* environment) {
 
 LocalReference applicationContext(JNIEnv* environment) {
   const jclass providerClass = requireClass(
-      environment,
-      "com/mobilenativebarcodegenerator/GalleryContextProvider");
+      environment, "com/mobilenativebarcodegenerator/GalleryContextProvider");
   const LocalReference providerClassReference(environment, providerClass);
   const jmethodID getContext = requireMethod(
       environment,
@@ -156,7 +158,8 @@ LocalReference applicationContext(JNIEnv* environment) {
   LocalReference context(
       environment,
       environment->CallStaticObjectMethod(providerClass, getContext));
-  throwIfJavaException(environment, "obtaining the Android application context");
+  throwIfJavaException(
+      environment, "obtaining the Android application context");
 
   if (!context) {
     throw std::runtime_error("Android application context is unavailable");
@@ -190,7 +193,8 @@ std::string savePngToGallery(
   JNIEnv* environment = facebook::jni::Environment::current();
 
   const LocalReference context = applicationContext(environment);
-  const jclass contextClass = requireClass(environment, "android/content/Context");
+  const jclass contextClass =
+      requireClass(environment, "android/content/Context");
   const LocalReference contextClassReference(environment, contextClass);
   const jmethodID getResolver = requireMethod(
       environment,
@@ -202,7 +206,8 @@ std::string savePngToGallery(
       environment->CallObjectMethod(context.as<jobject>(), getResolver));
   throwIfJavaException(environment, "obtaining Android ContentResolver");
 
-  const jclass valuesClass = requireClass(environment, "android/content/ContentValues");
+  const jclass valuesClass =
+      requireClass(environment, "android/content/ContentValues");
   const LocalReference valuesClassReference(environment, valuesClass);
   const jmethodID valuesConstructor =
       requireMethod(environment, valuesClass, "<init>", "()V");
@@ -217,15 +222,22 @@ std::string savePngToGallery(
       "put",
       "(Ljava/lang/String;Ljava/lang/Integer;)V");
   const LocalReference values(
-      environment,
-      environment->NewObject(valuesClass, valuesConstructor));
+      environment, environment->NewObject(valuesClass, valuesConstructor));
   throwIfJavaException(environment, "creating image metadata");
 
   const std::string fileName = normalizedFileName(requestedFileName);
   putString(
-      environment, values.as<jobject>(), putStringMethod, "_display_name", fileName);
+      environment,
+      values.as<jobject>(),
+      putStringMethod,
+      "_display_name",
+      fileName);
   putString(
-      environment, values.as<jobject>(), putStringMethod, "mime_type", "image/png");
+      environment,
+      values.as<jobject>(),
+      putStringMethod,
+      "mime_type",
+      "image/png");
 
   const int sdkVersion = androidSdkVersion(environment);
 
@@ -291,12 +303,12 @@ std::string savePngToGallery(
     throwIfJavaException(environment, "opening the gallery image");
 
     if (!stream) {
-      throw std::runtime_error("Android MediaStore did not open an output stream");
+      throw std::runtime_error(
+          "Android MediaStore did not open an output stream");
     }
 
     const LocalReference bytes(
-        environment,
-        environment->NewByteArray(static_cast<jsize>(png.size())));
+        environment, environment->NewByteArray(static_cast<jsize>(png.size())));
     environment->SetByteArrayRegion(
         bytes.as<jbyteArray>(),
         0,
@@ -304,7 +316,8 @@ std::string savePngToGallery(
         reinterpret_cast<const jbyte*>(png.data()));
     throwIfJavaException(environment, "copying the PNG data");
 
-    const jclass streamClass = requireClass(environment, "java/io/OutputStream");
+    const jclass streamClass =
+        requireClass(environment, "java/io/OutputStream");
     const LocalReference streamClassReference(environment, streamClass);
     const jmethodID writeMethod =
         requireMethod(environment, streamClass, "write", "([B)V");
@@ -321,8 +334,7 @@ std::string savePngToGallery(
 
     if (sdkVersion >= 29) {
       const LocalReference completedValues(
-          environment,
-          environment->NewObject(valuesClass, valuesConstructor));
+          environment, environment->NewObject(valuesClass, valuesConstructor));
       putInteger(
           environment,
           completedValues.as<jobject>(),
@@ -334,7 +346,8 @@ std::string savePngToGallery(
           environment,
           resolverClass,
           "update",
-          "(Landroid/net/Uri;Landroid/content/ContentValues;Ljava/lang/String;[Ljava/lang/String;)I");
+          "(Landroid/net/Uri;Landroid/content/ContentValues;Ljava/lang/"
+          "String;[Ljava/lang/String;)I");
       environment->CallIntMethod(
           resolver.as<jobject>(),
           updateMethod,

@@ -1,0 +1,13 @@
+BasedOnStyle: Google
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands: DontAlign
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: Empty
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 80
+ContinuationIndentWidth: 4
+DerivePointerAlignment: false
+IncludeBlocks: Preserve
+IndentWidth: 2
+PointerAlignment: Left

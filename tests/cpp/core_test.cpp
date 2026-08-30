@@ -1,5 +1,5 @@
-#include "core/Base64.h"
 #include "core/BarcodeGenerator.h"
+#include "core/Base64.h"
 #include "core/Code128Encoder.h"
 #include "core/QrCodeEncoder.h"
 
@@ -32,8 +32,7 @@ void testBase64() {
   require(
       mnbg::encodeBase64({'f'}) == "Zg==", "Single-byte Base64 input failed");
   require(
-      mnbg::encodeBase64({'f', 'o'}) == "Zm8=",
-      "Two-byte Base64 input failed");
+      mnbg::encodeBase64({'f', 'o'}) == "Zm8=", "Two-byte Base64 input failed");
   require(
       mnbg::encodeBase64({'f', 'o', 'o'}) == "Zm9v",
       "Three-byte Base64 input failed");
@@ -67,8 +66,8 @@ void testQrCode() {
 }
 
 void testPng() {
-  const std::vector<std::uint8_t> png = mnbg::generatePng(
-      mnbg::Symbology::qrCode, "native-cpp", 257, 193);
+  const std::vector<std::uint8_t> png =
+      mnbg::generatePng(mnbg::Symbology::qrCode, "native-cpp", 257, 193);
   const std::vector<std::uint8_t> signature = {
       0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
 
@@ -79,8 +78,8 @@ void testPng() {
   require(readUint32(png, 16) == 257, "PNG width is invalid");
   require(readUint32(png, 20) == 193, "PNG height is invalid");
 
-  const std::string base64 = mnbg::generatePngBase64(
-      mnbg::Symbology::code128, "123456", 300, 100);
+  const std::string base64 =
+      mnbg::generatePngBase64(mnbg::Symbology::code128, "123456", 300, 100);
   require(base64.starts_with("iVBORw0KGgo"), "PNG Base64 prefix is invalid");
 }
 

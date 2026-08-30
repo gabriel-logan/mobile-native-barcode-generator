@@ -70,8 +70,8 @@ std::vector<std::uint8_t> makeZlibStream(
 
   do {
     const std::size_t remaining = rawData.size() - offset;
-    const auto blockSize = static_cast<std::uint16_t>(
-        std::min<std::size_t>(remaining, 65535));
+    const auto blockSize =
+        static_cast<std::uint16_t>(std::min<std::size_t>(remaining, 65535));
     const bool finalBlock = offset + blockSize == rawData.size();
 
     output.push_back(finalBlock ? 0x01 : 0x00);
@@ -83,7 +83,8 @@ std::vector<std::uint8_t> makeZlibStream(
     output.push_back(static_cast<std::uint8_t>(inverse >> 8));
 
     output.insert(
-        output.end(), rawData.begin() + static_cast<std::ptrdiff_t>(offset),
+        output.end(),
+        rawData.begin() + static_cast<std::ptrdiff_t>(offset),
         rawData.begin() + static_cast<std::ptrdiff_t>(offset + blockSize));
     offset += blockSize;
   } while (offset < rawData.size());

@@ -20,8 +20,8 @@ PHAuthorizationStatus requestPhotoAuthorization() {
   PHAuthorizationStatus status;
 
   if (@available(iOS 14, *)) {
-    status = [PHPhotoLibrary authorizationStatusForAccessLevel:
-                                 PHAccessLevelAddOnly];
+    status =
+        [PHPhotoLibrary authorizationStatusForAccessLevel:PHAccessLevelAddOnly];
   } else {
     status = [PHPhotoLibrary authorizationStatus];
   }
@@ -35,11 +35,12 @@ PHAuthorizationStatus requestPhotoAuthorization() {
       PHAuthorizationStatusNotDetermined;
 
   if (@available(iOS 14, *)) {
-    [PHPhotoLibrary requestAuthorizationForAccessLevel:PHAccessLevelAddOnly
-                                               handler:^(PHAuthorizationStatus result) {
-      requestedStatus = result;
-      dispatch_semaphore_signal(semaphore);
-    }];
+    [PHPhotoLibrary
+        requestAuthorizationForAccessLevel:PHAccessLevelAddOnly
+                                   handler:^(PHAuthorizationStatus result) {
+                                     requestedStatus = result;
+                                     dispatch_semaphore_signal(semaphore);
+                                   }];
   } else {
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus result) {
       requestedStatus = result;
@@ -91,7 +92,7 @@ std::string savePngToGallery(
                                options:options];
           localIdentifier = request.placeholderForCreatedAsset.localIdentifier;
         }
-        error:&error];
+                        error:&error];
 
     if (!saved) {
       const char* message = error.localizedDescription.UTF8String;

@@ -1,0 +1,18 @@
+// Spotless for android/src. It sits at the root because Spotless only accepts
+// targets inside its own project dir, and android/ cannot be a Gradle build of
+// its own: run that way it applies `com.facebook.react`, whose plugin only
+// exists in the host app's node_modules.
+plugins {
+  id "com.diffplug.spotless" version "8.10.1"
+}
+
+repositories {
+  mavenCentral()
+}
+
+spotless {
+  java {
+    target "android/src/**/*.java"
+    googleJavaFormat()
+  }
+}
