@@ -118,10 +118,12 @@ jobs:
             --no-daemon \
             --stacktrace
 
-      - name: Upload the APK
-        uses: actions/upload-artifact@v7
-        with:
-          name: example-debug-apk
-          path: example/android/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
-          retention-days: 7
+      # The APK is not uploaded: it is built to prove the C++ compiles through
+      # the NDK, not to be kept. This replaces the `if-no-files-found: error`
+      # that the upload used to provide.
+      - name: Verify the APK was produced
+        run: |
+          if ! ls example/android/app/build/outputs/apk/debug/*.apk >/dev/null 2>&1; then
+            echo "::error::assembleDebug produced no APK"
+            exit 1
+          fi
