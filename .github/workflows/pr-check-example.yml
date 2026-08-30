@@ -1,0 +1,86 @@
+name: PR Check Example
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "example/**"
+      - "!example/android/**"
+      - "!example/ios/**"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/pr-check-example.yml"
+  push:
+    branches: [main]
+    paths:
+      - "example/**"
+      - "!example/android/**"
+      - "!example/ios/**"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/pr-check-example.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  example:
+    name: Lint, typecheck and test the example app
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Install the library dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The example depends on the library through `file:..` with
+      # `install-links=true`, so `dist/` and `types/` must exist before `npm ci`.
+      - name: Build the library
+        run: pnpm build
+
+      - name: Install the example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Lint
+        working-directory: example
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: example
+        run: npx tsc --noEmit
+
+      - name: Test
+        working-directory: example
+        run: npm test -- --ci --coverage --maxWorkers=2
+
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: example-coverage
+          path: example/coverage
+          if-no-files-found: ignore
+          retention-days: 7

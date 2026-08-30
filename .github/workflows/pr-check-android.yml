@@ -1,0 +1,111 @@
+name: PR Check Android
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "cpp/**"
+      - "CMakeLists.txt"
+      - "react-native.config.js"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/android/**"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-android.yml"
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "cpp/**"
+      - "CMakeLists.txt"
+      - "react-native.config.js"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/android/**"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-android.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ANDROID_NDK_VERSION: "27.1.12297006"
+
+jobs:
+  build:
+    name: Build the library and the example app
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Validate the Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          build-root-directory: example/android
+
+      - name: Install the NDK
+        run: |
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+            "ndk;${ANDROID_NDK_VERSION}" "cmake;3.22.1"
+
+      - name: Install the library dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the library
+        run: pnpm build
+
+      - name: Install the example dependencies
+        working-directory: example
+        run: npm ci
+
+      # Only arm64 is built: the other ABIs multiply the NDK compile time
+      # without adding coverage for the C++ core.
+      - name: Assemble the example app
+        working-directory: example/android
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx4g
+        run: |
+          ./gradlew assembleDebug \
+            -PreactNativeArchitectures=arm64-v8a \
+            --no-daemon \
+            --stacktrace
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: example-debug-apk
+          path: example/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 7

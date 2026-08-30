@@ -1,0 +1,106 @@
+name: PR Check iOS
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "cpp/**"
+      - "CMakeLists.txt"
+      - "mobile-native-barcode-generator.podspec"
+      - "react-native.config.js"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-ios.yml"
+  push:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "cpp/**"
+      - "CMakeLists.txt"
+      - "mobile-native-barcode-generator.podspec"
+      - "react-native.config.js"
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/package.json"
+      - "example/package-lock.json"
+      - ".github/workflows/pr-check-ios.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build the library and the example app
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - name: Setup Ruby and CocoaPods
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: example
+          bundler-cache: true
+
+      - name: Install the library dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the library
+        run: pnpm build
+
+      - name: Install the example dependencies
+        working-directory: example
+        run: npm ci
+
+      - name: Cache the pods
+        uses: actions/cache@v6
+        with:
+          path: example/ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('example/ios/Podfile', 'example/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install the pods
+        working-directory: example/ios
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/example/Gemfile
+        run: bundle exec pod install
+
+      - name: Build the example app for the simulator
+        working-directory: example/ios
+        run: |
+          set -o pipefail && xcodebuild \
+            -workspace example.xcworkspace \
+            -scheme example \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            build

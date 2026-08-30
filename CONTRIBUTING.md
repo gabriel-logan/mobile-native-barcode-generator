@@ -72,6 +72,20 @@ npm test
 
 Remember to add tests for your change if possible: C++ changes belong in `tests/cpp/core_test.cpp`, JavaScript-visible behaviour in `example/__tests__/`.
 
+## Continuous integration
+
+Every pull request against `main` runs one workflow per language, each scoped by path so only the affected checks run:
+
+| Workflow | File | What it does |
+| --- | --- | --- |
+| PR Check C++ | `.github/workflows/pr-check-cpp.yml` | Builds the core on Linux and macOS in Debug and Release, runs CTest, and rebuilds with `-Werror`. |
+| PR Check TypeScript | `.github/workflows/pr-check-ts.yml` | `pnpm typecheck`, `pnpm build`, `pnpm pack` and a codegen run. |
+| PR Check Android | `.github/workflows/pr-check-android.yml` | Validates the Gradle wrapper and assembles the example app (arm64 only), which compiles the C++ through the NDK. |
+| PR Check iOS | `.github/workflows/pr-check-ios.yml` | Runs `pod install` and builds the example app for the iOS simulator. |
+| PR Check Example | `.github/workflows/pr-check-example.yml` | Lints, type-checks and runs the example Jest suite, including the public API contract test. |
+
+All of them also run on pushes to `main` and can be started manually from the Actions tab.
+
 ## Regenerating the codegen artifacts
 
 After changing `src/specs/NativeMobileNativeBarcodeGenerator.ts`, regenerate the native interfaces:

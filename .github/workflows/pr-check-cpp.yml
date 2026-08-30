@@ -1,0 +1,80 @@
+name: PR Check C++
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "cpp/**"
+      - "tests/cpp/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/pr-check-cpp.yml"
+  push:
+    branches: [main]
+    paths:
+      - "cpp/**"
+      - "tests/cpp/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/pr-check-cpp.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: Core tests (${{ matrix.os }}, ${{ matrix.build_type }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Show the toolchain
+        run: |
+          cmake --version
+          c++ --version
+
+      - name: Configure
+        run: |
+          cmake -S . -B build/cpp \
+            -DMNBG_BUILD_TESTS=ON \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+      - name: Build
+        run: cmake --build build/cpp --config ${{ matrix.build_type }} --parallel
+
+      - name: Test
+        run: ctest --test-dir build/cpp --build-config ${{ matrix.build_type }} --output-on-failure
+
+  strict:
+    name: Warnings as errors
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Configure with -Werror
+        run: |
+          cmake -S . -B build/strict \
+            -DMNBG_BUILD_TESTS=ON \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_CXX_FLAGS="-Werror"
+
+      - name: Build
+        run: cmake --build build/strict --parallel
+
+      - name: Test
+        run: ctest --test-dir build/strict --output-on-failure
