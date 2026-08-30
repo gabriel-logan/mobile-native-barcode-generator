@@ -6,6 +6,7 @@ buildscript {
 
   dependencies {
     classpath "com.android.tools.build:gradle:8.8.2"
+    classpath "com.facebook.react:react-native-gradle-plugin"
   }
 }
 
@@ -14,6 +15,14 @@ apply plugin: "com.facebook.react"
 
 def getExtOrDefault(name, fallback) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : fallback
+}
+
+def getReactNativeVersion() {
+  def reactNativeProperties = new Properties()
+  rootProject.file("../node_modules/react-native/ReactAndroid/gradle.properties").withInputStream {
+    reactNativeProperties.load(it)
+  }
+  return reactNativeProperties.getProperty("VERSION_NAME")
 }
 
 android {
@@ -37,7 +46,8 @@ repositories {
 }
 
 dependencies {
-  implementation "com.facebook.react:react-android"
+  def reactNativeVersion = project == rootProject ? ":${getReactNativeVersion()}" : ""
+  implementation "com.facebook.react:react-android${reactNativeVersion}"
 }
 
 react {

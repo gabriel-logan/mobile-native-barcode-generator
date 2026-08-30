@@ -14,6 +14,9 @@ importers:
       '@react-native-community/cli':
         specifier: ^20.2.0
         version: 20.2.0(typescript@5.9.3)
+      '@react-native/codegen':
+        specifier: 0.87.0
+        version: 0.87.0(@babel/core@7.29.7)
       '@react-native/gradle-plugin':
         specifier: ^0.87.1
         version: 0.87.1

@@ -66,6 +66,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@react-native-community/cli": "^20.2.0",
+    "@react-native/codegen": "0.87.0",
     "@react-native/gradle-plugin": "^0.87.1",
     "@types/react": "^19.2.18",
     "eslint": "^10.9.1",
