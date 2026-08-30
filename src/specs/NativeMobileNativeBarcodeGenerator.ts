@@ -6,27 +6,27 @@ export interface Spec extends TurboModule {
     value: string,
     width: number,
     height: number,
-  ) => string;
+  ) => Promise<string>;
 
   readonly generateQRCode: (
     value: string,
     width: number,
     height: number,
-  ) => string;
+  ) => Promise<string>;
 
   readonly saveBarcodeToGallery: (
     value: string,
     width: number,
     height: number,
     fileName: string,
-  ) => string;
+  ) => Promise<string>;
 
   readonly saveQRCodeToGallery: (
     value: string,
     width: number,
     height: number,
     fileName: string,
-  ) => string;
+  ) => Promise<string>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>(

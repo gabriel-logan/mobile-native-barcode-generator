@@ -1,6 +1,7 @@
 #pragma once
 
 #include <RNMobileNativeBarcodeGeneratorSpecJSI.h>
+#include <react/bridging/Promise.h>
 
 #include <memory>
 #include <string>
@@ -14,26 +15,26 @@ class NativeMobileNativeBarcodeGenerator final
   explicit NativeMobileNativeBarcodeGenerator(
       std::shared_ptr<CallInvoker> jsInvoker);
 
-  std::string generateBarcode(
+  AsyncPromise<std::string> generateBarcode(
       jsi::Runtime& runtime,
       std::string value,
       double width,
       double height);
 
-  std::string generateQRCode(
+  AsyncPromise<std::string> generateQRCode(
       jsi::Runtime& runtime,
       std::string value,
       double width,
       double height);
 
-  std::string saveBarcodeToGallery(
+  AsyncPromise<std::string> saveBarcodeToGallery(
       jsi::Runtime& runtime,
       std::string value,
       double width,
       double height,
       std::string fileName);
 
-  std::string saveQRCodeToGallery(
+  AsyncPromise<std::string> saveQRCodeToGallery(
       jsi::Runtime& runtime,
       std::string value,
       double width,

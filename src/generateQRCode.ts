@@ -10,7 +10,11 @@ export default async function generateQRCode(
 ): Promise<string> {
   validateQRCodeInput(value, width, height);
 
-  const base64 = NativeBarcodeGenerator.generateQRCode(value, width, height);
+  const base64 = await NativeBarcodeGenerator.generateQRCode(
+    value,
+    width,
+    height,
+  );
 
   return `${PNG_DATA_URI_PREFIX}${base64}`;
 }

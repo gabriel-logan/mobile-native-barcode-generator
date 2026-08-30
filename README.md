@@ -270,10 +270,10 @@ jest.mock(
   () => ({
     __esModule: true,
     default: {
-      generateBarcode: jest.fn(() => "barcode-base64"),
-      generateQRCode: jest.fn(() => "qr-code-base64"),
-      saveBarcodeToGallery: jest.fn(() => "content://barcode"),
-      saveQRCodeToGallery: jest.fn(() => "content://qr-code"),
+      generateBarcode: jest.fn().mockResolvedValue("barcode-base64"),
+      generateQRCode: jest.fn().mockResolvedValue("qr-code-base64"),
+      saveBarcodeToGallery: jest.fn().mockResolvedValue("content://barcode"),
+      saveQRCodeToGallery: jest.fn().mockResolvedValue("content://qr-code"),
     },
   }),
 );
@@ -287,10 +287,9 @@ test("returns a data URI", async () => {
 });
 ```
 
-The native methods are synchronous and return the base64 payload (or the saved
-location), so the mock returns a plain string — the promise is created on the
-JavaScript side. This keeps the real validation, the real `data:image/png;base64,`
-prefix and the real components.
+The native generation methods resolve with the base64 payload, and the gallery
+methods resolve with the saved location. This keeps the real validation, the
+real `data:image/png;base64,` prefix and the real components.
 
 If you only care that your screen renders a code, mock the whole package
 instead:

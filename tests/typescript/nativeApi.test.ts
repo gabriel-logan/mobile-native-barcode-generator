@@ -3,9 +3,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const boundaries = vi.hoisted(() => ({
   native: {
     generateBarcode:
-      vi.fn<(value: string, width: number, height: number) => string>(),
+      vi.fn<
+        (value: string, width: number, height: number) => Promise<string>
+      >(),
     generateQRCode:
-      vi.fn<(value: string, width: number, height: number) => string>(),
+      vi.fn<
+        (value: string, width: number, height: number) => Promise<string>
+      >(),
     saveBarcodeToGallery:
       vi.fn<
         (
@@ -13,7 +17,7 @@ const boundaries = vi.hoisted(() => ({
           width: number,
           height: number,
           fileName: string,
-        ) => string
+        ) => Promise<string>
       >(),
     saveQRCodeToGallery:
       vi.fn<
@@ -22,7 +26,7 @@ const boundaries = vi.hoisted(() => ({
           width: number,
           height: number,
           fileName: string,
-        ) => string
+        ) => Promise<string>
       >(),
   },
   ensureGalleryPermission: vi.fn<() => Promise<void>>(),
@@ -47,7 +51,7 @@ describe("generation API", () => {
   });
 
   it("returns a PNG data URI for a barcode", async () => {
-    boundaries.native.generateBarcode.mockReturnValue("barcode-base64");
+    boundaries.native.generateBarcode.mockResolvedValue("barcode-base64");
 
     await expect(generateBarcode("ABC-123", 300, 100)).resolves.toBe(
       "data:image/png;base64,barcode-base64",
@@ -60,7 +64,7 @@ describe("generation API", () => {
   });
 
   it("returns a PNG data URI for a QR code", async () => {
-    boundaries.native.generateQRCode.mockReturnValue("qr-base64");
+    boundaries.native.generateQRCode.mockResolvedValue("qr-base64");
 
     await expect(
       generateQRCode("https://example.test", 240, 240),
@@ -87,7 +91,9 @@ describe("gallery API", () => {
   });
 
   it("saves a barcode after checking gallery permission", async () => {
-    boundaries.native.saveBarcodeToGallery.mockReturnValue("content://barcode");
+    boundaries.native.saveBarcodeToGallery.mockResolvedValue(
+      "content://barcode",
+    );
 
     await expect(
       saveBarcodeToGallery("ABC-123", 300, 100, "barcode"),
@@ -102,7 +108,7 @@ describe("gallery API", () => {
   });
 
   it("saves a QR code after checking gallery permission", async () => {
-    boundaries.native.saveQRCodeToGallery.mockReturnValue("ph://qr-code");
+    boundaries.native.saveQRCodeToGallery.mockResolvedValue("ph://qr-code");
 
     await expect(
       saveQRCodeToGallery("QR-CODE", 240, 240, "qr-code.png"),

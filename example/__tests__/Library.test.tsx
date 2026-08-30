@@ -7,10 +7,10 @@ jest.mock(
   () => ({
     __esModule: true,
     default: {
-      generateBarcode: jest.fn(() => 'barcode-base64'),
-      generateQRCode: jest.fn(() => 'qr-code-base64'),
-      saveBarcodeToGallery: jest.fn(() => 'content://barcode'),
-      saveQRCodeToGallery: jest.fn(() => 'content://qr-code'),
+      generateBarcode: jest.fn().mockResolvedValue('barcode-base64'),
+      generateQRCode: jest.fn().mockResolvedValue('qr-code-base64'),
+      saveBarcodeToGallery: jest.fn().mockResolvedValue('content://barcode'),
+      saveQRCodeToGallery: jest.fn().mockResolvedValue('content://qr-code'),
     },
   }),
 );

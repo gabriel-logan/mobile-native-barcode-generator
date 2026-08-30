@@ -10,7 +10,11 @@ export default async function generateBarcode(
 ): Promise<string> {
   validateBarcodeInput(value, width, height);
 
-  const base64 = NativeBarcodeGenerator.generateBarcode(value, width, height);
+  const base64 = await NativeBarcodeGenerator.generateBarcode(
+    value,
+    width,
+    height,
+  );
 
   return `${PNG_DATA_URI_PREFIX}${base64}`;
 }

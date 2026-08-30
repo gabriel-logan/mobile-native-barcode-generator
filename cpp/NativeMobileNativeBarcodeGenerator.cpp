@@ -42,46 +42,82 @@ NativeMobileNativeBarcodeGenerator::NativeMobileNativeBarcodeGenerator(
     std::shared_ptr<CallInvoker> jsInvoker)
     : NativeMobileNativeBarcodeGeneratorCxxSpec(std::move(jsInvoker)) {}
 
-std::string NativeMobileNativeBarcodeGenerator::generateBarcode(
-    jsi::Runtime&,
+AsyncPromise<std::string> NativeMobileNativeBarcodeGenerator::generateBarcode(
+    jsi::Runtime& runtime,
     std::string value,
     double width,
     double height) {
-  return mnbg::generatePngBase64(
-      mnbg::Symbology::code128,
-      value,
-      checkedDimension(width, "Width"),
-      checkedDimension(height, "Height"));
+  auto promise = AsyncPromise<std::string>(runtime, jsInvoker_);
+
+  try {
+    promise.resolve(mnbg::generatePngBase64(
+        mnbg::Symbology::code128,
+        value,
+        checkedDimension(width, "Width"),
+        checkedDimension(height, "Height")));
+  } catch (const std::exception& error) {
+    promise.reject(Error(error.what()));
+  }
+
+  return promise;
 }
 
-std::string NativeMobileNativeBarcodeGenerator::generateQRCode(
-    jsi::Runtime&,
+AsyncPromise<std::string> NativeMobileNativeBarcodeGenerator::generateQRCode(
+    jsi::Runtime& runtime,
     std::string value,
     double width,
     double height) {
-  return mnbg::generatePngBase64(
-      mnbg::Symbology::qrCode,
-      value,
-      checkedDimension(width, "Width"),
-      checkedDimension(height, "Height"));
+  auto promise = AsyncPromise<std::string>(runtime, jsInvoker_);
+
+  try {
+    promise.resolve(mnbg::generatePngBase64(
+        mnbg::Symbology::qrCode,
+        value,
+        checkedDimension(width, "Width"),
+        checkedDimension(height, "Height")));
+  } catch (const std::exception& error) {
+    promise.reject(Error(error.what()));
+  }
+
+  return promise;
 }
 
-std::string NativeMobileNativeBarcodeGenerator::saveBarcodeToGallery(
-    jsi::Runtime&,
+AsyncPromise<std::string>
+NativeMobileNativeBarcodeGenerator::saveBarcodeToGallery(
+    jsi::Runtime& runtime,
     std::string value,
     double width,
     double height,
     std::string fileName) {
-  return saveCode(mnbg::Symbology::code128, value, width, height, fileName);
+  auto promise = AsyncPromise<std::string>(runtime, jsInvoker_);
+
+  try {
+    promise.resolve(
+        saveCode(mnbg::Symbology::code128, value, width, height, fileName));
+  } catch (const std::exception& error) {
+    promise.reject(Error(error.what()));
+  }
+
+  return promise;
 }
 
-std::string NativeMobileNativeBarcodeGenerator::saveQRCodeToGallery(
-    jsi::Runtime&,
+AsyncPromise<std::string>
+NativeMobileNativeBarcodeGenerator::saveQRCodeToGallery(
+    jsi::Runtime& runtime,
     std::string value,
     double width,
     double height,
     std::string fileName) {
-  return saveCode(mnbg::Symbology::qrCode, value, width, height, fileName);
+  auto promise = AsyncPromise<std::string>(runtime, jsInvoker_);
+
+  try {
+    promise.resolve(
+        saveCode(mnbg::Symbology::qrCode, value, width, height, fileName));
+  } catch (const std::exception& error) {
+    promise.reject(Error(error.what()));
+  }
+
+  return promise;
 }
 
 }  // namespace facebook::react

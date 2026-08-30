@@ -13,7 +13,7 @@ export default async function saveBarcodeToGallery(
 
   await ensureGalleryPermission();
 
-  return NativeBarcodeGenerator.saveBarcodeToGallery(
+  return await NativeBarcodeGenerator.saveBarcodeToGallery(
     value,
     width,
     height,

@@ -13,7 +13,7 @@ export default async function saveQRCodeToGallery(
 
   await ensureGalleryPermission();
 
-  return NativeBarcodeGenerator.saveQRCodeToGallery(
+  return await NativeBarcodeGenerator.saveQRCodeToGallery(
     value,
     width,
     height,
