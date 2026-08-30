@@ -1,15 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-interface WasmResult {
-  value?: string;
-  error?: string;
-}
+import type { MnbgWasmResult } from "../../wasm/mnbg-wasm.js";
 
 const wasm = vi.hoisted(() => ({
   generateBarcodeBase64:
-    vi.fn<(value: string, width: number, height: number) => WasmResult>(),
+    vi.fn<(value: string, width: number, height: number) => MnbgWasmResult>(),
   generateQRCodeBase64:
-    vi.fn<(value: string, width: number, height: number) => WasmResult>(),
+    vi.fn<(value: string, width: number, height: number) => MnbgWasmResult>(),
 }));
 
 const createModule = vi.hoisted(() => vi.fn(() => Promise.resolve(wasm)));

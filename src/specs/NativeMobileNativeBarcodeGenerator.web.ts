@@ -1,26 +1,16 @@
 import createMnbgWasmModule from "../../wasm/mnbg-wasm.js";
-import type { MainModule } from "../../wasm/mnbg-wasm.js";
+import type { MnbgWasmModule, MnbgWasmResult } from "../../wasm/mnbg-wasm.js";
 import type { Spec } from "./NativeMobileNativeBarcodeGenerator";
 
 const PNG_DATA_URI_PREFIX = "data:image/png;base64,";
 
-/**
- * Shape of what the bindings return. Emscripten types an `emscripten::val`
- * return as `any`, so the contract is spelled out here instead — exactly one of
- * the two fields is set.
- */
-interface WasmResult {
-  value?: string;
-  error?: string;
-}
-
-let modulePromise: Promise<MainModule> | undefined;
+let modulePromise: Promise<MnbgWasmModule> | undefined;
 
 /**
  * Instantiates the wasm module once and shares it across every call. A failed
  * instantiation is not cached, so a later call can retry it.
  */
-function loadWasmModule(): Promise<MainModule> {
+function loadWasmModule(): Promise<MnbgWasmModule> {
   modulePromise ??= createMnbgWasmModule().catch((reason: unknown) => {
     modulePromise = undefined;
     throw reason;
@@ -29,18 +19,16 @@ function loadWasmModule(): Promise<MainModule> {
   return modulePromise;
 }
 
-function unwrap(result: unknown): string {
-  const { value, error } = result as WasmResult;
-
-  if (error !== undefined) {
-    throw new Error(error);
+function unwrap(result: MnbgWasmResult): string {
+  if (result.error !== undefined) {
+    throw new Error(result.error);
   }
 
-  if (value === undefined) {
+  if (result.value === undefined) {
     throw new Error("Failed to generate the image");
   }
 
-  return value;
+  return result.value;
 }
 
 function decodeBase64(base64: string) {

@@ -66,6 +66,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # `emcmake` on the PATH: `build:wasm` then skips its Docker fallback,
+      # which cannot mount the workspace as the runner user.
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 6.0.8
+          actions-cache-folder: emsdk-cache
+
       # `wasm/mnbg-wasm.js` is generated, not tracked; `test:ts` exercises it
       # and `pnpm pack` publishes it.
       - name: Build the WebAssembly artifact

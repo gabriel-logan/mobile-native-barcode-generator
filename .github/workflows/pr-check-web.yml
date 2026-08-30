@@ -67,6 +67,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # `emcmake` on the PATH: `build:wasm` then skips its Docker fallback,
+      # which cannot mount the workspace as the runner user.
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 6.0.8
+          actions-cache-folder: emsdk-cache
+
       - name: Build the WebAssembly artifact
         run: pnpm run build:wasm
 
@@ -96,6 +104,14 @@ jobs:
 
       - name: Install the library dependencies
         run: pnpm install --frozen-lockfile
+
+      # `emcmake` on the PATH: `build:wasm` then skips its Docker fallback,
+      # which cannot mount the workspace as the runner user.
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 6.0.8
+          actions-cache-folder: emsdk-cache
 
       - name: Build the library
         run: pnpm run build:wasm && pnpm build

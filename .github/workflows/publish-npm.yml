@@ -42,6 +42,14 @@ jobs:
         with:
           cache: true
 
+      # `pnpm test` and `prepack` both build the wasm module, which is not
+      # tracked; without `emcmake` here the publish would ship no web support.
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 6.0.8
+          actions-cache-folder: emsdk-cache
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -74,8 +82,8 @@ jobs:
         run: pnpm build
 
       # Everything above runs through pnpm; only the publish itself uses npm.
-      # `prepack` (pnpm run build) runs once more here, on the exact tree that
-      # gets packed. Drop `--provenance` if the package or the repository is
+      # `prepack` (build:wasm plus the TypeScript build) runs once more here, on
+      # the exact tree that gets packed. Drop `--provenance` if the package or the repository is
       # ever made private: provenance requires a public package.
       - name: Publish
         run: npm publish

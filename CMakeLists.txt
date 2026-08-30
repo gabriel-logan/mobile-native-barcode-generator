@@ -45,8 +45,6 @@ if(EMSCRIPTEN)
     -sFILESYSTEM=0
     -sINCOMING_MODULE_JS_API=[]
     -sEXPORTED_RUNTIME_METHODS=[]
-    # Emits mnbg-wasm.d.ts next to the module, from the embind bindings.
-    --emit-tsd mnbg-wasm.d.ts
   )
 elseif(ANDROID)
   add_library(mobile_native_barcode_generator STATIC

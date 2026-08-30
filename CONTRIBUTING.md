@@ -7,7 +7,7 @@ We want this community to be friendly and respectful to each other. Please follo
 ## Repository layout
 
 - `cpp/` — the shared C++ core: encoders (`Code128Encoder`, `QrCodeEncoder`), `BitMatrix`, `PngEncoder`, `Base64`, the Turbo Module (`NativeMobileNativeBarcodeGenerator`), the per-platform gallery savers in `cpp/platform/` and the Emscripten bindings in `cpp/wasm/`.
-- `wasm/` — the Emscripten build of the core and its TypeScript declaration, both produced by `pnpm build:wasm`. Fully generated, so the whole directory is ignored by git.
+- `wasm/` — `mnbg-wasm.js`, the Emscripten build of the core, produced by `pnpm build:wasm` and ignored by git. Its declaration `mnbg-wasm.d.ts` sits beside it and _is_ source: `tsc` needs it, and requiring an Emscripten toolchain just to type-check would hold up every other workflow.
 - `src/` — the TypeScript API: the codegen spec, input validation and the `BarcodeView` / `QRCodeView` components. Files ending in `.web.ts` are the browser implementations that bundlers pick over their native siblings.
 - `android/` and `ios/` — thin platform glue only (Gradle/CMake wiring, the iOS module provider and `GallerySaver.mm`).
 - `tests/cpp/` — standalone tests for the C++ core, run with CTest.
@@ -27,17 +27,17 @@ Node 22 or newer is required (see `.nvmrc`). Building the C++ core also needs CM
 
 ### Rebuilding the WebAssembly artifact
 
-The web module runs the same C++ core compiled to wasm. Everything in `wasm/` is generated and ignored by git, so **build it once after cloning, and again whenever you change anything under `cpp/core/` or `cpp/wasm/`**:
+The web module runs the same C++ core compiled to wasm. `wasm/mnbg-wasm.js` is generated and ignored by git, so **build it once after cloning, and again whenever you change anything under `cpp/core/` or `cpp/wasm/`**:
 
 ```sh
 pnpm build:wasm
 ```
 
-`pnpm test` and `prepack` run it for you; `pnpm test:ts` on its own expects it to be there already.
+`pnpm test` and `prepack` run it for you; `pnpm test:ts` on its own expects it to be there already. Everything else — `pnpm typecheck`, `pnpm build`, `pnpm lint` — works on a bare checkout, which is what keeps the Android, iOS and example workflows free of Emscripten. If you change the bindings, update `wasm/mnbg-wasm.d.ts` to match.
 
 The script uses `emcmake` from a local [Emscripten SDK](https://emscripten.org/docs/getting_started/downloads.html) when one is on the PATH and otherwise falls back to the `emscripten/emsdk` Docker image, so publishing a release needs one of the two available. The version is pinned in `scripts/build-wasm.js` so every machine produces the same artifact.
 
-The artifact is a single self-contained CommonJS file with the wasm binary embedded, so consumers never have to serve a `.wasm` asset; `--emit-tsd` writes `mnbg-wasm.d.ts` beside it from the embind bindings. Failures are returned to JavaScript as `{ error }` rather than thrown, because an unwound C++ exception only reaches the browser as an opaque pointer and would lose the message the native modules reject with.
+The artifact is a single self-contained CommonJS file with the wasm binary embedded, so consumers never have to serve a `.wasm` asset. Failures are returned to JavaScript as `{ error }` rather than thrown, because an unwound C++ exception only reaches the browser as an opaque pointer and would lose the message the native modules reject with.
 
 Build the JavaScript output and the codegen spec:
 
@@ -138,6 +138,8 @@ Every pull request against `main` runs one workflow per language, each scoped by
 | PR Check iOS        | `.github/workflows/pr-check-ios.yml`     | Runs `pod install` and builds the example app for the iOS simulator.                                                                |
 | PR Check Example    | `.github/workflows/pr-check-example.yml` | Lints, type-checks and runs the example Jest suite, including the public API contract test.                                         |
 | PR Check Web        | `.github/workflows/pr-check-web.yml`     | Builds the wasm artifact from the C++ core, runs the TypeScript suite against it and bundles the example for the web.               |
+
+The workflows that need the wasm module (`PR Check TypeScript`, `PR Check Web` and the publish job) install Emscripten with `mymindstorm/setup-emsdk`; the rest run on a bare checkout.
 
 All of them also run on pushes to `main` and can be started manually from the Actions tab.
 
