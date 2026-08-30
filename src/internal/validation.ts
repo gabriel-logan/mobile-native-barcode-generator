@@ -4,17 +4,19 @@ const MAX_IMAGE_DIMENSION = 4096;
 
 function validateValue(value: string) {
   if (value.length === 0) {
-    throw new Error('Value cannot be empty');
+    throw new Error("Value cannot be empty");
   }
 }
 
 function validateLength(value: string, maximumLength: number, label: string) {
   if (value.length > maximumLength) {
-    throw new Error(`${label} value length must be less than ${maximumLength} characters`);
+    throw new Error(
+      `${label} value length must be less than ${maximumLength} characters`,
+    );
   }
 }
 
-function validateDimension(value: number, label: 'Width' | 'Height') {
+function validateDimension(value: number, label: "Width" | "Height") {
   if (!Number.isInteger(value) || value <= 0) {
     throw new Error(`${label} must be a positive integer`);
   }
@@ -30,9 +32,9 @@ export function validateBarcodeInput(
   height: number,
 ) {
   validateValue(value);
-  validateLength(value, MAX_BARCODE_LENGTH, 'Barcode');
-  validateDimension(width, 'Width');
-  validateDimension(height, 'Height');
+  validateLength(value, MAX_BARCODE_LENGTH, "Barcode");
+  validateDimension(width, "Width");
+  validateDimension(height, "Height");
 }
 
 export function validateQRCodeInput(
@@ -41,9 +43,9 @@ export function validateQRCodeInput(
   height: number,
 ) {
   validateValue(value);
-  validateLength(value, MAX_QR_CODE_LENGTH, 'QR code');
-  validateDimension(width, 'Width');
-  validateDimension(height, 'Height');
+  validateLength(value, MAX_QR_CODE_LENGTH, "QR code");
+  validateDimension(width, "Width");
+  validateDimension(height, "Height");
 }
 
 export function validateSaveInput(
@@ -52,12 +54,12 @@ export function validateSaveInput(
   height: number,
 ) {
   validateValue(value);
-  validateDimension(width, 'Width');
-  validateDimension(height, 'Height');
+  validateDimension(width, "Width");
+  validateDimension(height, "Height");
 }
 
 export function validateFileName(fileName: string) {
   if (fileName.trim().length === 0) {
-    throw new Error('Filename cannot be empty');
+    throw new Error("Filename cannot be empty");
   }
 }

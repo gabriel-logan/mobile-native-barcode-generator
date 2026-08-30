@@ -1,7 +1,7 @@
-import {PermissionsAndroid, Platform} from 'react-native';
+import { PermissionsAndroid, Platform } from "react-native";
 
 export async function ensureGalleryPermission() {
-  if (Platform.OS !== 'android' || Number(Platform.Version) >= 29) {
+  if (Platform.OS !== "android" || Number(Platform.Version) >= 29) {
     return;
   }
 
@@ -9,6 +9,6 @@ export async function ensureGalleryPermission() {
   const result = await PermissionsAndroid.request(permission);
 
   if (result !== PermissionsAndroid.RESULTS.GRANTED) {
-    throw new Error('Permission to save images to the gallery was denied');
+    throw new Error("Permission to save images to the gallery was denied");
   }
 }

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 
 export default function useGeneratedImage(
   generate: (value: string, width: number, height: number) => Promise<string>,
@@ -16,12 +16,12 @@ export default function useGeneratedImage(
     setError(undefined);
 
     generate(value, width, height)
-      .then(result => {
+      .then((result) => {
         if (active) {
           setUri(result);
         }
       })
-      .catch(reason => {
+      .catch((reason) => {
         if (active) {
           setError(reason);
         }

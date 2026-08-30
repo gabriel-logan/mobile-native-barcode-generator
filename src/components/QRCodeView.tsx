@@ -1,9 +1,9 @@
-import {Image} from 'react-native';
+import { Image } from "react-native";
 
-import generateQRCode from '../generateQRCode';
-import {validateQRCodeInput} from '../internal/validation';
-import type {QRCodeViewProps} from './types';
-import useGeneratedImage from './useGeneratedImage';
+import generateQRCode from "../generateQRCode";
+import { validateQRCodeInput } from "../internal/validation";
+import type { QRCodeViewProps } from "./types";
+import useGeneratedImage from "./useGeneratedImage";
 
 export default function QRCodeView({
   value,
@@ -25,8 +25,8 @@ export default function QRCodeView({
   return (
     <Image
       testID={testID}
-      source={{uri}}
-      style={[{width, height}, style]}
+      source={{ uri }}
+      style={[{ width, height }, style]}
       onLoad={onLoad}
       onError={onError}
     />

@@ -1,7 +1,7 @@
-const {copyFileSync, mkdirSync} = require('node:fs');
+const { copyFileSync, mkdirSync } = require("node:fs");
 
-mkdirSync('types/codegen', {recursive: true});
+mkdirSync("types/codegen", { recursive: true });
 copyFileSync(
-  'src/specs/NativeMobileNativeBarcodeGenerator.ts',
-  'types/codegen/NativeMobileNativeBarcodeGenerator.ts',
+  "src/specs/NativeMobileNativeBarcodeGenerator.ts",
+  "types/codegen/NativeMobileNativeBarcodeGenerator.ts",
 );

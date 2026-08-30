@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
-import {Image} from 'react-native';
+import { Image } from 'react-native';
 
 jest.mock(
   'mobile-native-barcode-generator/dist/specs/NativeMobileNativeBarcodeGenerator',
@@ -47,12 +47,12 @@ test('keeps the legacy function contract', async () => {
   await expect(generateQRCode('hello', 200, 200)).resolves.toBe(
     'data:image/png;base64,qr-code-base64',
   );
-  await expect(
-    saveBarcodeToGallery('123', 300, 100, 'barcode'),
-  ).resolves.toBe('content://barcode');
-  await expect(
-    saveQRCodeToGallery('hello', 200, 200, 'qr-code'),
-  ).resolves.toBe('content://qr-code');
+  await expect(saveBarcodeToGallery('123', 300, 100, 'barcode')).resolves.toBe(
+    'content://barcode',
+  );
+  await expect(saveQRCodeToGallery('hello', 200, 200, 'qr-code')).resolves.toBe(
+    'content://qr-code',
+  );
 });
 
 test('keeps both legacy component contracts', async () => {
@@ -86,9 +86,9 @@ test('rejects invalid input before calling native code', async () => {
   await expect(generateQRCode('a'.repeat(2501), 200, 200)).rejects.toThrow(
     'QR code value length must be less than 2500 characters',
   );
-  await expect(
-    saveQRCodeToGallery('hello', 200, 200, '   '),
-  ).rejects.toThrow('Filename cannot be empty');
+  await expect(saveQRCodeToGallery('hello', 200, 200, '   ')).rejects.toThrow(
+    'Filename cannot be empty',
+  );
 });
 
 test('keeps legacy save functions free from generation length limits', async () => {

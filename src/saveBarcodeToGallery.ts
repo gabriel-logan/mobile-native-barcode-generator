@@ -1,6 +1,6 @@
-import {ensureGalleryPermission} from './internal/galleryPermission';
-import {validateFileName, validateSaveInput} from './internal/validation';
-import NativeBarcodeGenerator from './specs/NativeMobileNativeBarcodeGenerator';
+import { ensureGalleryPermission } from "./internal/galleryPermission";
+import { validateFileName, validateSaveInput } from "./internal/validation";
+import NativeBarcodeGenerator from "./specs/NativeMobileNativeBarcodeGenerator";
 
 export default async function saveBarcodeToGallery(
   value: string,

@@ -145,13 +145,13 @@ const styles = StyleSheet.create({
 
 | Prop      | Type                    | Required | Description                                                       |
 | --------- | ----------------------- | -------- | ----------------------------------------------------------------- |
-| `value`   | `string`                | yes      | Content to encode.                                                 |
-| `width`   | `number`                | yes      | Image width in pixels (positive integer, max 4096).                |
-| `height`  | `number`                | yes      | Image height in pixels (positive integer, max 4096).               |
-| `style`   | `StyleProp<ImageStyle>` | no       | Extra image styles. Width and height are controlled by the props.  |
-| `testID`  | `string`                | no       | Forwarded to the underlying `Image`.                               |
-| `onLoad`  | `ImageProps["onLoad"]`  | no       | Forwarded to the underlying `Image`.                               |
-| `onError` | `ImageProps["onError"]` | no       | Forwarded to the underlying `Image`.                               |
+| `value`   | `string`                | yes      | Content to encode.                                                |
+| `width`   | `number`                | yes      | Image width in pixels (positive integer, max 4096).               |
+| `height`  | `number`                | yes      | Image height in pixels (positive integer, max 4096).              |
+| `style`   | `StyleProp<ImageStyle>` | no       | Extra image styles. Width and height are controlled by the props. |
+| `testID`  | `string`                | no       | Forwarded to the underlying `Image`.                              |
+| `onLoad`  | `ImageProps["onLoad"]`  | no       | Forwarded to the underlying `Image`.                              |
+| `onError` | `ImageProps["onError"]` | no       | Forwarded to the underlying `Image`.                              |
 
 The components render `null` while the image is being generated and throw during
 render if generation fails, so an

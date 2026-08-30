@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   Alert,
   Image,
@@ -47,7 +47,8 @@ export default function App() {
       <ScrollView
         contentContainerStyle={styles.content}
         contentInsetAdjustmentBehavior="automatic"
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         <Text style={styles.title}>Barcode Generator</Text>
         <Text style={styles.description}>
           This app exercises every public API exposed by the library.
@@ -95,14 +96,11 @@ export default function App() {
             onPress={() =>
               run(async () => {
                 setGeneratedBarcode(
-                  await generateBarcode(
-                    value,
-                    BARCODE_WIDTH,
-                    BARCODE_HEIGHT,
-                  ),
+                  await generateBarcode(value, BARCODE_WIDTH, BARCODE_HEIGHT),
                 );
               })
-            }>
+            }
+          >
             <Text style={styles.secondaryButtonText}>Generate barcode</Text>
           </Pressable>
 
@@ -114,7 +112,8 @@ export default function App() {
                   await generateQRCode(value, QR_CODE_SIZE, QR_CODE_SIZE),
                 );
               })
-            }>
+            }
+          >
             <Text style={styles.secondaryButtonText}>Generate QR code</Text>
           </Pressable>
 
@@ -130,7 +129,8 @@ export default function App() {
                 );
                 Alert.alert('Barcode saved', uri);
               })
-            }>
+            }
+          >
             <Text style={styles.secondaryButtonText}>Save barcode</Text>
           </Pressable>
 
@@ -146,7 +146,8 @@ export default function App() {
                 );
                 Alert.alert('QR code saved', uri);
               })
-            }>
+            }
+          >
             <Text style={styles.secondaryButtonText}>Save QR code</Text>
           </Pressable>
         </View>
@@ -155,8 +156,8 @@ export default function App() {
           <View style={styles.preview}>
             <Image
               accessibilityLabel="Generated barcode"
-              source={{uri: generatedBarcode}}
-              style={{width: BARCODE_WIDTH, height: BARCODE_HEIGHT}}
+              source={{ uri: generatedBarcode }}
+              style={{ width: BARCODE_WIDTH, height: BARCODE_HEIGHT }}
             />
           </View>
         )}
@@ -165,8 +166,8 @@ export default function App() {
           <View style={styles.preview}>
             <Image
               accessibilityLabel="Generated QR code"
-              source={{uri: generatedQRCode}}
-              style={{width: QR_CODE_SIZE, height: QR_CODE_SIZE}}
+              source={{ uri: generatedQRCode }}
+              style={{ width: QR_CODE_SIZE, height: QR_CODE_SIZE }}
             />
           </View>
         )}

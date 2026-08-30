@@ -6,7 +6,7 @@ import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 
 jest.mock('mobile-native-barcode-generator', () => {
-  const {View} = require('react-native');
+  const { View } = require('react-native');
 
   return {
     BarcodeView: View,
