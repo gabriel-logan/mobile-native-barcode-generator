@@ -79,7 +79,7 @@ Every pull request against `main` runs one workflow per language, each scoped by
 | Workflow            | File                                     | What it does                                                                                                     |
 | ------------------- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | PR Check C++        | `.github/workflows/pr-check-cpp.yml`     | Builds the core on Linux and macOS in Debug and Release, runs CTest, and rebuilds with `-Werror`.                |
-| PR Check TypeScript | `.github/workflows/pr-check-ts.yml`      | `pnpm typecheck`, `pnpm build`, `pnpm pack` and a codegen run.                                                   |
+| PR Check TypeScript | `.github/workflows/pr-check-ts.yml`      | `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm build`, `pnpm pack` and a codegen run.                 |
 | PR Check Android    | `.github/workflows/pr-check-android.yml` | Validates the Gradle wrapper and assembles the example app (arm64 only), which compiles the C++ through the NDK. |
 | PR Check iOS        | `.github/workflows/pr-check-ios.yml`     | Runs `pod install` and builds the example app for the iOS simulator.                                             |
 | PR Check Example    | `.github/workflows/pr-check-example.yml` | Lints, type-checks and runs the example Jest suite, including the public API contract test.                      |

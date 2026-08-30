@@ -9,6 +9,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+      - "eslint.config.mts"
       - ".github/workflows/pr-check-ts.yml"
   push:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+      - "eslint.config.mts"
       - ".github/workflows/pr-check-ts.yml"
   workflow_dispatch:
 
@@ -50,6 +52,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Check the formatting
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint:fix
 
       - name: Typecheck
         run: pnpm typecheck
