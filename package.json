@@ -71,7 +71,8 @@
     "react": "19.2.3",
     "react-native": "0.87.0",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.68.0"
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
   },
   "codegenConfig": {
     "name": "RNMobileNativeBarcodeGeneratorSpec",
