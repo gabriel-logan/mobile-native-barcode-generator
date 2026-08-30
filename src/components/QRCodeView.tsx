@@ -13,10 +13,16 @@ export default function QRCodeView({
   style,
   onLoad,
   onError,
+  onGenerationError,
 }: QRCodeViewProps) {
-  validateQRCodeInput(value, width, height);
-
-  const uri = useGeneratedImage(generateQRCode, value, width, height);
+  const uri = useGeneratedImage(
+    generateQRCode,
+    validateQRCodeInput,
+    value,
+    width,
+    height,
+    onGenerationError,
+  );
 
   if (uri === undefined) {
     return null;

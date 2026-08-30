@@ -168,20 +168,46 @@ const styles = StyleSheet.create({
 
 `BarcodeView` and `QRCodeView` share the same props:
 
-| Prop      | Type                    | Required | Description                                                       |
-| --------- | ----------------------- | -------- | ----------------------------------------------------------------- |
-| `value`   | `string`                | yes      | Content to encode.                                                |
-| `width`   | `number`                | yes      | Image width in pixels (positive integer, max 4096).               |
-| `height`  | `number`                | yes      | Image height in pixels (positive integer, max 4096).              |
-| `style`   | `StyleProp<ImageStyle>` | no       | Extra image styles. Width and height are controlled by the props. |
-| `testID`  | `string`                | no       | Forwarded to the underlying `Image`.                              |
-| `onLoad`  | `ImageProps["onLoad"]`  | no       | Forwarded to the underlying `Image`.                              |
-| `onError` | `ImageProps["onError"]` | no       | Forwarded to the underlying `Image`.                              |
+| Prop                | Type                     | Required | Description                                                       |
+| ------------------- | ------------------------ | -------- | ----------------------------------------------------------------- |
+| `value`             | `string`                 | yes      | Content to encode.                                                |
+| `width`             | `number`                 | yes      | Image width in pixels (positive integer, max 4096).               |
+| `height`            | `number`                 | yes      | Image height in pixels (positive integer, max 4096).              |
+| `style`             | `StyleProp<ImageStyle>`  | no       | Extra image styles. Width and height are controlled by the props. |
+| `testID`            | `string`                 | no       | Forwarded to the underlying `Image`.                              |
+| `onLoad`            | `ImageProps["onLoad"]`   | no       | Forwarded to the underlying `Image`.                              |
+| `onError`           | `ImageProps["onError"]`  | no       | Forwarded to the underlying `Image`.                              |
+| `onGenerationError` | `(error: Error) => void` | no       | Called when the value cannot be encoded. See below.               |
 
-The components render `null` while the image is being generated and throw during
-render if generation fails, so an
-[error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)
-can catch invalid input.
+The components render `null` while the image is being generated. What happens
+when generation fails depends on whether you pass `onGenerationError`:
+
+- **Without it**, the error is thrown during render, so an
+  [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary)
+  can catch invalid input. With no boundary above it, the error takes down the
+  screen.
+- **With it**, the error is handed to your callback and the component renders
+  nothing. Use this whenever `value` comes from somewhere it can legitimately be
+  empty or wrong — a text input, an API response — since an empty string is
+  invalid input and would otherwise crash the tree on every keystroke that
+  clears the field:
+
+```tsx
+const [error, setError] = useState<string>();
+
+<BarcodeView
+  value={value}
+  width={300}
+  height={100}
+  onGenerationError={(reason) => setError(reason.message)}
+/>;
+{
+  error !== undefined && <Text>{error}</Text>;
+}
+```
+
+`onGenerationError` covers encoding failures; `onError` is the underlying
+`Image`'s own load error and is left untouched.
 
 The exported types are `CodeViewProps`, `BarcodeViewProps` and `QRCodeViewProps`.
 

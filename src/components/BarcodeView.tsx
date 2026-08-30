@@ -13,10 +13,16 @@ export default function BarcodeView({
   style,
   onLoad,
   onError,
+  onGenerationError,
 }: BarcodeViewProps) {
-  validateBarcodeInput(value, width, height);
-
-  const uri = useGeneratedImage(generateBarcode, value, width, height);
+  const uri = useGeneratedImage(
+    generateBarcode,
+    validateBarcodeInput,
+    value,
+    width,
+    height,
+    onGenerationError,
+  );
 
   if (uri === undefined) {
     return null;

@@ -28,6 +28,7 @@ export default function App() {
   const [value, setValue] = useState(input);
   const [generatedBarcode, setGeneratedBarcode] = useState<string>();
   const [generatedQRCode, setGeneratedQRCode] = useState<string>();
+  const [componentError, setComponentError] = useState<string>();
 
   async function run(action: () => Promise<void>) {
     try {
@@ -64,18 +65,27 @@ export default function App() {
           value={input}
         />
 
-        <Pressable style={styles.primaryButton} onPress={() => setValue(input)}>
+        <Pressable
+          style={styles.primaryButton}
+          onPress={() => {
+            setComponentError(undefined);
+            setValue(input);
+          }}
+        >
           <Text style={styles.primaryButtonText}>Update components</Text>
         </Pressable>
 
         <Text style={styles.sectionTitle}>Components</Text>
 
+        {/* `onGenerationError` keeps an empty or unencodable input from
+            throwing during render and taking the screen down with it. */}
         <View style={styles.preview}>
           <BarcodeView
             testID="barcode-component"
             value={value}
             width={BARCODE_WIDTH}
             height={BARCODE_HEIGHT}
+            onGenerationError={error => setComponentError(error.message)}
           />
         </View>
 
@@ -85,8 +95,13 @@ export default function App() {
             value={value}
             width={QR_CODE_SIZE}
             height={QR_CODE_SIZE}
+            onGenerationError={error => setComponentError(error.message)}
           />
         </View>
+
+        {componentError !== undefined && (
+          <Text style={styles.error}>{componentError}</Text>
+        )}
 
         <Text style={styles.sectionTitle}>Functions</Text>
 
@@ -227,6 +242,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     marginTop: 12,
+  },
+  error: {
+    color: '#b00020',
+    marginTop: 8,
+    textAlign: 'center',
   },
   preview: {
     alignItems: 'center',
