@@ -11,3 +11,4 @@ ios/generated/
 dist/
 types/
 /wasm/mnbg-wasm.js
+/emsdk-cache/
