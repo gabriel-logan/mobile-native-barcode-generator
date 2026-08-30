@@ -20,7 +20,13 @@ implementation.
 ## Supported Frameworks
 
 - React Native (New Architecture) - ✅
+- Expo with a development build - ✅
 - Expo GO - ❌ - [See Expo Version](https://github.com/gabriel-logan/expo-barcode)
+
+Expo is supported as long as the app is not running inside Expo Go. This is a
+native module, and Expo Go ships a fixed set of native code it cannot extend, so
+it needs a [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+or `expo prebuild` — both of which autolink it like any other native module.
 
 ## Supported Platforms
 
@@ -33,6 +39,8 @@ implementation.
 ## Requirements
 
 - React Native >= 0.76 with the New Architecture enabled
+- Expo (optional): SDK 52 or newer, with the New Architecture enabled and a
+  development build
 - React >= 18.3.1
 - Android: minSdk 24, compileSdk 36, Java 17
 - iOS: the minimum version supported by your React Native release, C++20
@@ -59,6 +67,20 @@ cd ios && pod install
 ```
 
 Autolinking handles the rest; there is no manual native setup.
+
+### Expo
+
+Install it the same way, then produce a build that can carry native code:
+
+```sh
+npx expo prebuild
+npx expo run:android   # or: npx expo run:ios
+```
+
+From then on autolinking handles it, exactly as in a bare React Native app. No
+config plugin is needed — but the gallery permissions below have to go in
+`app.json` instead of `AndroidManifest.xml` and `Info.plist`, since prebuild
+regenerates those files.
 
 ### Web
 
