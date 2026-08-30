@@ -66,6 +66,9 @@ yarn-error.log
 # testing
 /coverage
 
+# react-native-web
+/dist-web
+
 # Yarn
 .yarn/*
 !.yarn/patches

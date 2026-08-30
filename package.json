@@ -32,8 +32,8 @@
     "test:ts": "vitest run --config vitest.config.mts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/*",
-    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/*",
+    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/*",
+    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/* !example/dist-web/**/*",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
