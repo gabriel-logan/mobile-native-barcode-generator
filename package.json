@@ -25,6 +25,10 @@
     "prepack": "pnpm run build",
     "test": "pnpm run test:cpp && pnpm run typecheck",
     "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/*",
+    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/*",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -55,11 +59,19 @@
     "react-native": ">=0.76.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@react-native-community/cli": "^20.0.0",
     "@types/react": "^19.0.0",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react": "^7.37.5",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.6",
     "react": "19.2.3",
     "react-native": "0.87.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.68.0"
   },
   "codegenConfig": {
     "name": "RNMobileNativeBarcodeGeneratorSpec",
