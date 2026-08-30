@@ -27,8 +27,8 @@
     "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml",
-    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml",
+    "format": "prettier --write **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/*",
+    "format:check": "prettier --check **/*.{js,ts,tsx,json,css,md,html,yml,yaml} !coverage/**/* !pnpm-lock.yaml !dist/**/* !types/**/*",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
