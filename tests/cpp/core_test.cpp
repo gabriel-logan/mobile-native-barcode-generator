@@ -178,9 +178,9 @@ void testGeneratorValidation() {
   requireThrows<std::invalid_argument>(
       [] {
         static_cast<void>(
-            mnbg::generatePng(mnbg::Symbology::qrCode, "value", 100, 4097));
+            mnbg::generatePng(mnbg::Symbology::qrCode, "value", 100, 6145));
       },
-      "Generator accepted a dimension above 4096");
+      "Generator accepted a dimension above 6144");
   requireThrows<std::logic_error>(
       [] {
         static_cast<void>(mnbg::generatePng(

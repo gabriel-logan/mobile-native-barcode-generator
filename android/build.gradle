@@ -32,6 +32,7 @@ android {
   defaultConfig {
     minSdk getExtOrDefault("minSdkVersion", 24)
     targetSdk getExtOrDefault("targetSdkVersion", 36)
+    consumerProguardFiles "consumer-rules.pro"
   }
 
   compileOptions {

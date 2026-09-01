@@ -12,10 +12,10 @@ namespace facebook::react {
 namespace {
 
 int checkedDimension(double value, const char* label) {
-  if (!std::isfinite(value) || value <= 0 || value > 4096 ||
+  if (!std::isfinite(value) || value <= 0 || value > 6144 ||
       std::trunc(value) != value) {
     throw std::invalid_argument(
-        std::string(label) + " must be a positive integer up to 4096");
+        std::string(label) + " must be a positive integer up to 6144");
   }
 
   return static_cast<int>(value);

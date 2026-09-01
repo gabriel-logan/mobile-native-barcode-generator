@@ -50,7 +50,7 @@ describe("wasm artifact", () => {
 
     await expect(
       NativeBarcodeGenerator.generateBarcode("ABC", 0, 100),
-    ).rejects.toThrow("Width must be a positive integer up to 4096");
+    ).rejects.toThrow("Width must be a positive integer up to 6144");
 
     await expect(
       NativeBarcodeGenerator.generateQRCode("a".repeat(5000), 240, 240),

@@ -10,7 +10,7 @@
 namespace mnbg {
 namespace {
 
-constexpr int maximumDimension = 4096;
+constexpr int maximumDimension = 6144;
 
 void validateDimensions(int width, int height) {
   if (width <= 0 || height <= 0) {
@@ -18,7 +18,7 @@ void validateDimensions(int width, int height) {
   }
 
   if (width > maximumDimension || height > maximumDimension) {
-    throw std::invalid_argument("Image dimensions must not exceed 4096 pixels");
+    throw std::invalid_argument("Image dimensions must not exceed 6144 pixels");
   }
 }
 

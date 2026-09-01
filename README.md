@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
 | Prop                | Type                     | Required | Description                                                       |
 | ------------------- | ------------------------ | -------- | ----------------------------------------------------------------- |
 | `value`             | `string`                 | yes      | Content to encode.                                                |
-| `width`             | `number`                 | yes      | Image width in pixels (positive integer, max 4096).               |
-| `height`            | `number`                 | yes      | Image height in pixels (positive integer, max 4096).              |
+| `width`             | `number`                 | yes      | Image width in pixels (positive integer, max 6144).               |
+| `height`            | `number`                 | yes      | Image height in pixels (positive integer, max 6144).              |
 | `style`             | `StyleProp<ImageStyle>`  | no       | Extra image styles. Width and height are controlled by the props. |
 | `testID`            | `string`                 | no       | Forwarded to the underlying `Image`.                              |
 | `onLoad`            | `ImageProps["onLoad"]`   | no       | Forwarded to the underlying `Image`.                              |
@@ -265,7 +265,7 @@ rejects with an `Error` when it is invalid:
 - `value` cannot be empty.
 - Barcode (Code 128) values are limited to 80 characters.
 - QR code values are limited to 2500 characters.
-- `width` and `height` must be positive integers not greater than 4096.
+- `width` and `height` must be positive integers not greater than 6144.
 - `fileName` cannot be empty or blank when saving to the gallery.
 
 The save functions do not apply the barcode/QR length limits.

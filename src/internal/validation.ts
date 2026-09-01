@@ -1,6 +1,6 @@
 const MAX_BARCODE_LENGTH = 80;
 const MAX_QR_CODE_LENGTH = 2500;
-const MAX_IMAGE_DIMENSION = 4096;
+const MAX_IMAGE_DIMENSION = 6144;
 
 function validateValue(value: string) {
   if (value.length === 0) {

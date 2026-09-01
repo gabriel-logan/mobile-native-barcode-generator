@@ -6,6 +6,7 @@
   "types": "./types/index.d.ts",
   "files": [
     "android/build.gradle",
+    "android/consumer-rules.pro",
     "android/src/main",
     "cpp",
     "dist",
@@ -18,8 +19,7 @@
     "types",
     "CMakeLists.txt",
     "LICENSE",
-    "mobile-native-barcode-generator.podspec",
-    "react-native.config.js"
+    "mobile-native-barcode-generator.podspec"
   ],
   "scripts": {
     "build": "tsc --build --clean && tsc && node scripts/copy-codegen-spec.js",

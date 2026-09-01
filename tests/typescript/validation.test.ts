@@ -17,7 +17,7 @@ describe("input validation", () => {
   });
 
   it("accepts barcode values at the 80-character boundary", () => {
-    expect(() => validateBarcodeInput("a".repeat(80), 1, 4096)).not.toThrow();
+    expect(() => validateBarcodeInput("a".repeat(80), 1, 6144)).not.toThrow();
   });
 
   it("rejects barcode values above 80 characters", () => {
@@ -27,7 +27,7 @@ describe("input validation", () => {
   });
 
   it("accepts QR code values at the 2500-character boundary", () => {
-    expect(() => validateQRCodeInput("a".repeat(2500), 4096, 1)).not.toThrow();
+    expect(() => validateQRCodeInput("a".repeat(2500), 6144, 1)).not.toThrow();
   });
 
   it("rejects QR code values above 2500 characters", () => {
@@ -41,7 +41,7 @@ describe("input validation", () => {
     [-1, "Width must be a positive integer"],
     [1.5, "Width must be a positive integer"],
     [Number.NaN, "Width must be a positive integer"],
-    [4097, "Width must not exceed 4096 pixels"],
+    [6145, "Width must not exceed 6144 pixels"],
   ])("rejects invalid width %s", (width, message) => {
     expect(() => validateSaveInput("value", width, 100)).toThrow(message);
   });
@@ -51,7 +51,7 @@ describe("input validation", () => {
     [-1, "Height must be a positive integer"],
     [1.5, "Height must be a positive integer"],
     [Number.POSITIVE_INFINITY, "Height must be a positive integer"],
-    [4097, "Height must not exceed 4096 pixels"],
+    [6145, "Height must not exceed 6144 pixels"],
   ])("rejects invalid height %s", (height, message) => {
     expect(() => validateSaveInput("value", 100, height)).toThrow(message);
   });
