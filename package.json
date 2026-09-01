@@ -1,6 +1,6 @@
 {
   "name": "mobile-native-barcode-generator",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Cross-platform React Native barcode and QR code generation implemented in C++.",
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
@@ -19,7 +19,8 @@
     "types",
     "CMakeLists.txt",
     "LICENSE",
-    "mobile-native-barcode-generator.podspec"
+    "mobile-native-barcode-generator.podspec",
+    "react-native.config.js"
   ],
   "scripts": {
     "build": "tsc --build --clean && tsc && node scripts/copy-codegen-spec.js",
