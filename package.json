@@ -82,7 +82,7 @@
     "prettier": "^3.9.6",
     "react": "19.2.3",
     "react-native": "0.87.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",
     "vitest": "^4.1.11"
   },
