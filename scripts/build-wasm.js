@@ -61,11 +61,15 @@ if (hasExecutable("emcmake")) {
 } else if (hasExecutable("docker")) {
   console.log(`emcmake not found on PATH, building with ${dockerImage}`);
 
+  const dockerUserArgs =
+    typeof process.getuid === "function" && typeof process.getgid === "function"
+      ? ["-u", `${process.getuid()}:${process.getgid()}`]
+      : [];
+
   const docker = (args) => [
     "run",
     "--rm",
-    "-u",
-    `${process.getuid()}:${process.getgid()}`,
+    ...dockerUserArgs,
     "-v",
     `${projectRoot}:/src`,
     "-w",
