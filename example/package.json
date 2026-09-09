@@ -9,7 +9,9 @@
     "start": "react-native start",
     "web": "webpack serve --mode=development",
     "build:web": "webpack --mode=production",
-    "test": "jest"
+    "test": "jest",
+    "windows": "npx @react-native-community/cli run-windows",
+    "test:windows": "jest --config jest.config.windows.js"
   },
   "dependencies": {
     "mobile-native-barcode-generator": "file:..",
@@ -42,9 +44,17 @@
     "typescript": "^6.0.3",
     "webpack": "^5.110.2",
     "webpack-cli": "^7.2.3",
-    "webpack-dev-server": "^6.0.0"
+    "webpack-dev-server": "^6.0.0",
+    "@rnx-kit/jest-preset": "^0.3.1"
   },
   "engines": {
     "node": ">= 22.11.0"
+  },
+  "react-native-windows": {
+    "init-windows": {
+      "name": "example",
+      "namespace": "example",
+      "template": "cpp-app"
+    }
   }
 }
