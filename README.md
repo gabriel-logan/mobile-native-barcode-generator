@@ -32,8 +32,8 @@ or `expo prebuild` — both of which autolink it like any other native module.
 
 - Android - ✅
 - iOS - ✅
-- Web - ✅ (react-native-web, via WebAssembly)
-- Windows - ✅ (React Native Windows)
+- Web - ✅
+- Windows - ✅
 - Mac - ❌
 
 ## Requirements
