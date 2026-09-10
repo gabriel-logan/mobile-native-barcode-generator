@@ -22,6 +22,7 @@ implementation.
 
 - React Native (New Architecture) - ✅
 - React (web) - ✅
+- All other JS web frameworks (Vue, Svelte, Angular, Solid, etc.) - 🔵 - only the pre-made components are not supported
 - Expo with a development build - ✅
 - Expo GO - ❌ - [See Expo Version](https://github.com/gabriel-logan/expo-barcode)
 
