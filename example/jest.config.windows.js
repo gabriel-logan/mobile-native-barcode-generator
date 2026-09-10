@@ -3,4 +3,4 @@ const config = {
   testTimeout: 30000,
 };
 
-module.exports = require('@rnx-kit/jest-preset')('windows', config);
+module.exports = require("@rnx-kit/jest-preset")("windows", config);
