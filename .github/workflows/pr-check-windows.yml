@@ -1,0 +1,138 @@
+name: PR Check Windows
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "windows/**"
+      - "cpp/**"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "example/**"
+      - "CMakeLists.txt"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "react-native.config.js"
+      - ".github/workflows/pr-check-windows.yml"
+  push:
+    branches: [main]
+    paths:
+      - "windows/**"
+      - "cpp/**"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "example/**"
+      - "CMakeLists.txt"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "react-native.config.js"
+      - ".github/workflows/pr-check-windows.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  native-tests:
+    name: Windows C++ tests (${{ matrix.configuration }})
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure MSVC
+        run: cmake -S . -B build/windows-tests -G "Visual Studio 18 2026" -A x64 -DMNBG_BUILD_TESTS=ON -DCMAKE_CXX_FLAGS=/WX
+      - name: Build
+        run: cmake --build build/windows-tests --config ${{ matrix.configuration }} --parallel
+      - name: Test encoding and Windows filesystem integration
+        run: ctest --test-dir build/windows-tests -C ${{ matrix.configuration }} --output-on-failure --no-tests=error
+
+  example:
+    name: Windows app (${{ matrix.arch }}, ${{ matrix.configuration }})
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x64
+            configuration: Debug
+          - arch: x64
+            configuration: Release
+          - arch: ARM64
+            configuration: Release
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+      - uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: "[18.0,19.0)"
+          msbuild-architecture: x64
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+      - name: Install library dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build library JavaScript and codegen spec
+        run: pnpm build
+      - name: Install example with the packaged local library
+        working-directory: example
+        run: npm ci
+      - name: Test Windows JavaScript API and components
+        working-directory: example
+        run: npm run test:windows -- --ci --runInBand
+      - name: Autolink the Windows library
+        working-directory: example
+        run: npx --no-install @react-native-community/cli autolink-windows --logging --no-telemetry
+      - name: Select installed Windows SDK
+        id: windows-sdk
+        shell: pwsh
+        run: |
+          $minimumSdk = [Version]'10.0.22621.0'
+          $includeDirectory = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\Include'
+          $installedSdks = Get-ChildItem -LiteralPath $includeDirectory -Directory |
+            Where-Object { $_.Name -match '^\d+\.\d+\.\d+\.\d+$' } |
+            ForEach-Object { [Version]$_.Name } |
+            Where-Object { $_ -ge $minimumSdk } |
+            Sort-Object -Descending
+
+          $windowsSdk = $installedSdks | Select-Object -First 1
+          if ($null -eq $windowsSdk) {
+            throw "Windows SDK $minimumSdk or newer is required. Installed SDKs: $((Get-ChildItem -LiteralPath $includeDirectory -Directory).Name -join ', ')"
+          }
+
+          "version=$windowsSdk" >> $env:GITHUB_OUTPUT
+          Write-Host "Using Windows SDK $windowsSdk"
+      - name: Build app and native module
+        working-directory: example
+        run: >-
+          msbuild windows/example.sln /restore /m /t:example
+          /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.arch }}
+          /p:WindowsTargetPlatformVersion=${{ steps.windows-sdk.outputs.version }}
+          /p:TargetPlatformVersion=${{ steps.windows-sdk.outputs.version }}
+          /p:AppxBundle=Never /p:AppxPackageSigningEnabled=false
+          /bl:windows-build.binlog /verbosity:minimal
+      - name: Upload build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-build-${{ matrix.arch }}-${{ matrix.configuration }}
+          path: example/windows-build.binlog
+          if-no-files-found: ignore
+          retention-days: 7

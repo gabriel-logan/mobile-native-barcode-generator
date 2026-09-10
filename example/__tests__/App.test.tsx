@@ -2,11 +2,11 @@
  * @format
  */
 
-import React from 'react';
-import ReactTestRenderer from 'react-test-renderer';
+import React from "react";
+import ReactTestRenderer from "react-test-renderer";
 
-jest.mock('mobile-native-barcode-generator', () => {
-  const { View } = require('react-native');
+jest.mock("mobile-native-barcode-generator", () => {
+  const { View } = require("react-native");
 
   return {
     BarcodeView: View,
@@ -18,9 +18,9 @@ jest.mock('mobile-native-barcode-generator', () => {
   };
 });
 
-import App from '../App';
+import App from "../App";
 
-test('renders correctly', async () => {
+test("renders correctly", async () => {
   await ReactTestRenderer.act(() => {
     ReactTestRenderer.create(<App />);
   });

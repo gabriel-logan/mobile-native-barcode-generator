@@ -17,6 +17,7 @@
     "ios/MobileNativeBarcodeGeneratorModuleProvider.mm",
     "wasm",
     "types",
+    "windows",
     "CMakeLists.txt",
     "LICENSE",
     "mobile-native-barcode-generator.podspec",
@@ -27,11 +28,12 @@
     "build:cpp": "cmake -S . -B build/cpp -DMNBG_BUILD_TESTS=ON && cmake --build build/cpp",
     "build:wasm": "node scripts/build-wasm.js",
     "codegen": "pnpm run build && react-native codegen --path . --platform all --source library",
-    "prepack": "pnpm run build:wasm && pnpm run build",
+    "prepack": "pnpm codegen && pnpm run build:wasm && pnpm run build",
     "test": "pnpm run build:wasm && pnpm run test:ts && pnpm run test:cpp && pnpm run typecheck",
     "test:android": "node scripts/run-java-unit-tests.js",
     "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
     "test:ios": "cmake -S . -B build/ios-tests -DMNBG_BUILD_TESTS=ON && cmake --build build/ios-tests --target mnbg_ios_tests && ctest --test-dir build/ios-tests -R mnbg_ios_tests --output-on-failure",
+    "test:windows": "cmake -S . -B build/windows-tests -DMNBG_BUILD_TESTS=ON && cmake --build build/windows-tests --config Debug && ctest --test-dir build/windows-tests -C Debug --output-on-failure",
     "test:ts": "vitest run --config vitest.config.mts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -43,6 +45,7 @@
     "react-native",
     "android",
     "ios",
+    "windows",
     "c++",
     "barcode",
     "qr-code",
@@ -66,15 +69,21 @@
   },
   "peerDependencies": {
     "react": ">=18.3.1",
-    "react-native": ">=0.76.0"
+    "react-native": ">=0.76.0",
+    "react-native-windows": "^0.84.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-windows": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@react-native-community/cli": "^20.2.0",
     "@react-native/codegen": "0.87.1",
     "@react-native/gradle-plugin": "^0.87.1",
-    "@types/react": "^19.2.18",
-    "eslint": "^10.9.1",
+    "@types/react": "^19.3.0",
+    "eslint": "^10.10.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
@@ -82,8 +91,9 @@
     "prettier": "^3.9.6",
     "react": "19.2.3",
     "react-native": "0.87.0",
+    "react-native-windows": "0.84.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.69.0",
+    "typescript-eslint": "^8.70.0",
     "vitest": "^4.1.11"
   },
   "codegenConfig": {
@@ -96,6 +106,12 @@
     },
     "android": {
       "javaPackageName": "com.mobilenativebarcodegenerator"
+    },
+    "windows": {
+      "namespace": "MobileNativeBarcodeGeneratorCodegen",
+      "outputDirectory": "windows/MobileNativeBarcodeGenerator/codegen",
+      "cppStringType": "std::string",
+      "separateDataTypes": true
     },
     "ios": {
       "modulesProvider": {

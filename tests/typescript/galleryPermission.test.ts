@@ -37,6 +37,13 @@ describe("ensureGalleryPermission", () => {
     expect(reactNative.request).not.toHaveBeenCalled();
   });
 
+  it("does not request Android permission on Windows", async () => {
+    reactNative.platform.OS = "windows";
+    reactNative.platform.Version = "10.0";
+    await expect(ensureGalleryPermission()).resolves.toBeUndefined();
+    expect(reactNative.request).not.toHaveBeenCalled();
+  });
+
   it("does not request permission on Android API 29 or newer", async () => {
     reactNative.platform.OS = "android";
     reactNative.platform.Version = "29";

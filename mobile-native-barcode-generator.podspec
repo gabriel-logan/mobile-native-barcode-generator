@@ -19,10 +19,11 @@ Pod::Spec.new do |spec|
     "cpp/**/*.{h,cpp}",
     "ios/**/*.{h,mm}"
   ]
-  # The Android gallery saver and the Emscripten bindings both pull in headers
+  # The other platform adapters and the Emscripten bindings pull in headers
   # that do not exist on iOS, and `source_files` globs the whole of `cpp/`.
   spec.exclude_files = [
     "cpp/platform/GallerySaverAndroid.cpp",
+    "cpp/platform/GallerySaverWindows.*",
     "cpp/wasm/**/*"
   ]
   spec.frameworks = "Photos"

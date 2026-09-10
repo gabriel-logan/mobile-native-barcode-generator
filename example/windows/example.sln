@@ -7,6 +7,8 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "example.Package", "example.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example\example.vcxproj", "{A52399CD-2E4B-40EA-AB98-406727B4D051}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MobileNativeBarcodeGenerator", "..\node_modules\mobile-native-barcode-generator\windows\MobileNativeBarcodeGenerator\MobileNativeBarcodeGenerator.vcxproj", "{B8025864-82E9-4D77-996B-8D65D0D1A9AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -53,6 +55,18 @@ Global
 		{A52399CD-2E4B-40EA-AB98-406727B4D051}.Release|ARM64.ActiveCfg = Release|ARM64
 		{A52399CD-2E4B-40EA-AB98-406727B4D051}.Release|ARM64.Build.0 = Release|ARM64
 		{A52399CD-2E4B-40EA-AB98-406727B4D051}.Release|ARM64.Deploy.0 = Release|ARM64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|x64.ActiveCfg = Debug|x64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|x64.Build.0 = Debug|x64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|x86.Build.0 = Debug|Win32
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Debug|ARM64.Build.0 = Debug|ARM64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|x64.ActiveCfg = Release|x64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|x64.Build.0 = Release|x64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|x86.ActiveCfg = Release|Win32
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|x86.Build.0 = Release|Win32
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|ARM64.ActiveCfg = Release|ARM64
+		{B8025864-82E9-4D77-996B-8D65D0D1A9AF}.Release|ARM64.Build.0 = Release|ARM64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

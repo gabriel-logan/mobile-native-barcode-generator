@@ -8,6 +8,16 @@ module.exports = {
         cxxModuleHeaderName: "NativeMobileNativeBarcodeGenerator",
       },
       ios: {},
+      windows: {
+        sourceDir: "windows",
+        projects: [
+          {
+            projectFile:
+              "MobileNativeBarcodeGenerator/MobileNativeBarcodeGenerator.vcxproj",
+            directDependency: true,
+          },
+        ],
+      },
     },
   },
 };

@@ -9,7 +9,7 @@
 Cross-platform React Native barcode and QR code generation implemented in C++.
 
 Code 128 encoding, QR encoding and PNG output live in a single shared C++ core
-exposed as a Turbo Module, so Android and iOS produce byte-identical images from
+exposed as a Turbo Module, so Android, iOS and Windows produce byte-identical images from
 the same code, with no Kotlin or Swift generation logic and no third-party
 encoding dependency.
 
@@ -33,7 +33,7 @@ or `expo prebuild` — both of which autolink it like any other native module.
 - Android - ✅
 - iOS - ✅
 - Web - ✅ (react-native-web, via WebAssembly)
-- Windows - ❌
+- Windows - ✅ (React Native Windows)
 - Mac - ❌
 
 ## Requirements
@@ -44,6 +44,8 @@ or `expo prebuild` — both of which autolink it like any other native module.
 - React >= 18.3.1
 - Android: minSdk 24, compileSdk 36, Java 17
 - iOS: the minimum version supported by your React Native release, C++20
+- Windows: React Native Windows 0.84 with React Native 0.84.1, Visual Studio 2026
+  (MSVC v145), C++20 and Windows SDK 10.0.22621.0 or newer
 - Web: react-native-web and a browser with WebAssembly (every current browser)
 
 ## Installation
@@ -67,6 +69,32 @@ cd ios && pod install
 ```
 
 Autolinking handles the rest; there is no manual native setup.
+
+### Windows
+
+Install the library in a React Native Windows 0.84 app with the New Architecture
+enabled, then build normally:
+
+```sh
+npx @react-native-community/cli autolink-windows
+npx @react-native-community/cli run-windows
+```
+
+Autolinking registers the native module and MSBuild generates its Windows spec.
+All six APIs work with the same imports used on Android and iOS. Generation and
+file writes run on a background thread. Windows support is tested on RNW 0.84;
+use the React and React Native versions required by that RNW release.
+
+The save functions write to the user's Pictures known folder (including a
+redirected/OneDrive Pictures folder), under `MobileNativeBarcodeGenerator`,
+and resolve with a `file:///` URI. No gallery permission prompt or manifest
+capability is needed for this desktop app. Existing files are preserved by
+adding a numeric suffix. The `.png` extension is added if absent.
+
+Use a plain Windows filename: path separators, reserved device names such as
+`CON`, control characters, trailing spaces/dots and `<>:"/\\|?*` are rejected.
+Names are limited to 200 UTF-16 code units before adding the extension.
+Filesystem errors reject the returned promise.
 
 ### Expo
 
@@ -274,7 +302,8 @@ The save functions do not apply the barcode/QR length limits.
 
 `saveBarcodeToGallery` and `saveQRCodeToGallery` generate the PNG in C++ and
 write it to the device gallery. They resolve with the location of the saved
-image: a `content://` URI on Android, a `ph://` asset identifier on iOS.
+image: a `content://` URI on Android, a `ph://` asset identifier on iOS, or a
+`file:///` URI on Windows.
 
 On the web there is no gallery to write to, so the browser equivalent is used:
 the PNG is offered to the user as a download (the filename gains a `.png`

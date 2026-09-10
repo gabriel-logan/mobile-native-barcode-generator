@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Alert,
   Image,
@@ -9,7 +9,7 @@ import {
   Text,
   TextInput,
   View,
-} from 'react-native';
+} from "react-native";
 import {
   BarcodeView,
   generateBarcode,
@@ -17,14 +17,14 @@ import {
   QRCodeView,
   saveBarcodeToGallery,
   saveQRCodeToGallery,
-} from 'mobile-native-barcode-generator';
+} from "mobile-native-barcode-generator";
 
 const BARCODE_WIDTH = 320;
 const BARCODE_HEIGHT = 120;
 const QR_CODE_SIZE = 220;
 
 export default function App() {
-  const [input, setInput] = useState('1234567890');
+  const [input, setInput] = useState("1234567890");
   const [value, setValue] = useState(input);
   const [generatedBarcode, setGeneratedBarcode] = useState<string>();
   const [generatedQRCode, setGeneratedQRCode] = useState<string>();
@@ -35,7 +35,7 @@ export default function App() {
       await action();
     } catch (error) {
       Alert.alert(
-        'Operation failed',
+        "Operation failed",
         error instanceof Error ? error.message : String(error),
       );
     }
@@ -140,9 +140,9 @@ export default function App() {
                   value,
                   BARCODE_WIDTH,
                   BARCODE_HEIGHT,
-                  'example-barcode',
+                  "example-barcode",
                 );
-                Alert.alert('Barcode saved', uri);
+                Alert.alert("Barcode saved", uri);
               })
             }
           >
@@ -157,9 +157,9 @@ export default function App() {
                   value,
                   QR_CODE_SIZE,
                   QR_CODE_SIZE,
-                  'example-qr-code',
+                  "example-qr-code",
                 );
-                Alert.alert('QR code saved', uri);
+                Alert.alert("QR code saved", uri);
               })
             }
           >
@@ -194,83 +194,83 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#f5f7fb',
+    backgroundColor: "#f5f7fb",
   },
   content: {
-    alignItems: 'center',
+    alignItems: "center",
     gap: 16,
     padding: 24,
   },
   title: {
-    alignSelf: 'stretch',
-    color: '#111827',
+    alignSelf: "stretch",
+    color: "#111827",
     fontSize: 30,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   description: {
-    alignSelf: 'stretch',
-    color: '#4b5563',
+    alignSelf: "stretch",
+    color: "#4b5563",
     fontSize: 16,
     lineHeight: 24,
   },
   input: {
-    alignSelf: 'stretch',
-    backgroundColor: '#ffffff',
-    borderColor: '#cbd5e1',
+    alignSelf: "stretch",
+    backgroundColor: "#ffffff",
+    borderColor: "#cbd5e1",
     borderRadius: 10,
     borderWidth: 1,
-    color: '#111827',
+    color: "#111827",
     fontSize: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
   primaryButton: {
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: '#2563eb',
+    alignSelf: "stretch",
+    alignItems: "center",
+    backgroundColor: "#2563eb",
     borderRadius: 10,
     padding: 14,
   },
   primaryButtonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   sectionTitle: {
-    alignSelf: 'stretch',
-    color: '#111827',
+    alignSelf: "stretch",
+    color: "#111827",
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: "700",
     marginTop: 12,
   },
   error: {
-    color: '#b00020',
+    color: "#b00020",
     marginTop: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   preview: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    backgroundColor: '#ffffff',
+    alignItems: "center",
+    alignSelf: "stretch",
+    backgroundColor: "#ffffff",
     borderRadius: 12,
     minHeight: 152,
-    justifyContent: 'center',
-    overflow: 'hidden',
+    justifyContent: "center",
+    overflow: "hidden",
     padding: 16,
   },
   actions: {
-    alignSelf: 'stretch',
+    alignSelf: "stretch",
     gap: 10,
   },
   secondaryButton: {
-    alignItems: 'center',
-    backgroundColor: '#e2e8f0',
+    alignItems: "center",
+    backgroundColor: "#e2e8f0",
     borderRadius: 10,
     padding: 14,
   },
   secondaryButtonText: {
-    color: '#1e293b',
+    color: "#1e293b",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

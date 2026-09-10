@@ -11,6 +11,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace {
@@ -132,18 +133,14 @@ void testPng() {
       "PNG signature is invalid");
   require(readUint32(png, 16) == 257, "PNG width is invalid");
   require(readUint32(png, 20) == 193, "PNG height is invalid");
-  require(
-      std::search(png.begin(), png.end(), std::begin("IHDR"), std::end("IHDR") - 1) !=
-          png.end(),
-      "PNG IHDR chunk is missing");
-  require(
-      std::search(png.begin(), png.end(), std::begin("IDAT"), std::end("IDAT") - 1) !=
-          png.end(),
-      "PNG IDAT chunk is missing");
-  require(
-      std::search(png.begin(), png.end(), std::begin("IEND"), std::end("IEND") - 1) !=
-          png.end(),
-      "PNG IEND chunk is missing");
+  // Both iterators must belong to the same string. Separate string literals
+  // are not guaranteed to share storage (in particular in MSVC Debug builds).
+  for (const std::string_view chunk : {"IHDR", "IDAT", "IEND"}) {
+    require(
+        std::search(png.begin(), png.end(), chunk.begin(), chunk.end()) !=
+            png.end(),
+        "PNG " + std::string(chunk) + " chunk is missing");
+  }
 
   const std::string base64 =
       mnbg::generatePngBase64(mnbg::Symbology::code128, "123456", 300, 100);
