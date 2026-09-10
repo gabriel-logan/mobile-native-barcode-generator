@@ -28,7 +28,7 @@
     "build:cpp": "cmake -S . -B build/cpp -DMNBG_BUILD_TESTS=ON && cmake --build build/cpp",
     "build:wasm": "node scripts/build-wasm.js",
     "codegen": "pnpm run build && react-native codegen --path . --platform all --source library",
-    "prepack": "pnpm run build:wasm && pnpm run build",
+    "prepack": "pnpm codegen && pnpm run build:wasm && pnpm run build",
     "test": "pnpm run build:wasm && pnpm run test:ts && pnpm run test:cpp && pnpm run typecheck",
     "test:android": "node scripts/run-java-unit-tests.js",
     "test:cpp": "pnpm run build:cpp && ctest --test-dir build/cpp --output-on-failure",
