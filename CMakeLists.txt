@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.13)
 
 project(mobile_native_barcode_generator LANGUAGES CXX)
 
+if(MSVC)
+  set(MNBG_WARNINGS /W4 /permissive- /utf-8 /EHsc)
+else()
+  set(MNBG_WARNINGS -Wall -Wextra -Wpedantic)
+endif()
+
 set(MNBG_CORE_SOURCES
   cpp/core/Base64.cpp
   cpp/core/BarcodeGenerator.cpp
@@ -71,7 +77,7 @@ else()
   add_library(mnbg_core STATIC ${MNBG_CORE_SOURCES})
   target_include_directories(mnbg_core PUBLIC cpp)
   target_compile_features(mnbg_core PUBLIC cxx_std_20)
-  target_compile_options(mnbg_core PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(mnbg_core PRIVATE ${MNBG_WARNINGS})
 
   option(MNBG_BUILD_TESTS "Build the standalone C++ tests" OFF)
 
@@ -80,8 +86,19 @@ else()
     add_executable(mnbg_core_tests tests/cpp/core_test.cpp)
     target_link_libraries(mnbg_core_tests PRIVATE mnbg_core)
     target_compile_features(mnbg_core_tests PRIVATE cxx_std_20)
-    target_compile_options(mnbg_core_tests PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(mnbg_core_tests PRIVATE ${MNBG_WARNINGS})
     add_test(NAME mnbg_core_tests COMMAND mnbg_core_tests)
+
+    if(WIN32)
+      add_executable(mnbg_windows_tests
+        tests/windows/gallery_saver_test.cpp
+        cpp/platform/GallerySaverWindows.cpp
+      )
+      target_link_libraries(mnbg_windows_tests PRIVATE mnbg_core shell32 ole32 shlwapi)
+      target_compile_definitions(mnbg_windows_tests PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
+      target_compile_options(mnbg_windows_tests PRIVATE ${MNBG_WARNINGS})
+      add_test(NAME mnbg_windows_tests COMMAND mnbg_windows_tests)
+    endif()
 
     if(APPLE)
       enable_language(OBJCXX)

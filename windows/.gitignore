@@ -1,0 +1,9 @@
+**/codegen/
+**/Generated Files/
+**/Debug/
+**/Release/
+**/x64/
+**/ARM64/
+**/Win32/
+**/packages.lock.json
+.vs/
