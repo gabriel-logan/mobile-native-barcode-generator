@@ -92,6 +92,37 @@ npm start
 
 Then run the desired native platform command in another terminal.
 
+### Windows `Get-AppxPackage` deployment failure
+
+On some Windows installations, the React Native Windows CLI finds the
+Microsoft Store `pwsh.exe` alias and uses it for deployment. The solution can
+build successfully but deployment then fails while loading the Windows-only
+`Appx` module:
+
+```text
+Get-AppxPackage: The command was found in the module "Appx", but the module
+could not be loaded: Operation is not supported on this platform. (0x80131539)
+```
+
+This example applies a workaround automatically through its `prewindows`
+script. It keeps PowerShell 7 for the regular React Native Windows operations
+and uses Windows PowerShell 5.1 only for the incompatible `Appx` calls. Always
+start the Windows app through the npm script so the workaround runs first:
+
+```powershell
+npm run windows
+```
+
+The workaround is reapplied after `npm install` replaces `node_modules`. If the
+error returns, verify that Windows PowerShell is present at:
+
+```text
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+```
+
+Do not invoke `npx @react-native-community/cli run-windows` directly, because
+that bypasses the `prewindows` script.
+
 ## Production builds
 
 ### Android
