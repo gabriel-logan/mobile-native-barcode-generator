@@ -6,7 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm downloads](https://img.shields.io/npm/dm/mobile-native-barcode-generator.svg?style=flat-square)](https://npm-stat.com/charts.html?package=mobile-native-barcode-generator)
 
-Cross-platform React Native barcode and QR code generation implemented in C++.
+Cross-platform React Native and React (web) barcode and QR code generation
+implemented in C++.
 
 Code 128 encoding, QR encoding and PNG output live in a single shared C++ core
 exposed as a Turbo Module, so Android, iOS and Windows produce byte-identical images from
@@ -20,6 +21,7 @@ implementation.
 ## Supported Frameworks
 
 - React Native (New Architecture) - ✅
+- React (web) - ✅
 - Expo with a development build - ✅
 - Expo GO - ❌ - [See Expo Version](https://github.com/gabriel-logan/expo-barcode)
 
@@ -46,7 +48,8 @@ or `expo prebuild` — both of which autolink it like any other native module.
 - iOS: the minimum version supported by your React Native release, C++20
 - Windows: React Native Windows 0.84 with React Native 0.84.1, Visual Studio 2026
   (MSVC v145), C++20 and Windows SDK 10.0.22621.0 or newer
-- Web: react-native-web and a browser with WebAssembly (every current browser)
+- Web: a browser with WebAssembly (every current browser); `react-native-web`
+  is only needed for React Native web builds
 
 ## Installation
 
@@ -113,8 +116,10 @@ regenerates those files.
 ### Web
 
 Nothing extra to install. The package ships a prebuilt WebAssembly module and
-your bundler resolves the `.web.js` platform extension to it, the same way it
-does for your own web-only files.
+your bundler resolves the `.web.tsx` / `.web.js` platform extension to it, the
+same way it does for your own web-only files. This works for react-native-web
+and plain React apps alike — on the web the components render a plain `<img>`,
+so no `react-native` import is reached.
 
 The wasm binary is embedded in the JavaScript module, so there is no `.wasm`
 asset to copy, serve or configure — it adds roughly 74 KB (about 26 KB gzipped)
