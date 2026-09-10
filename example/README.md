@@ -1,97 +1,167 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Example App
 
-# Getting Started
+This React Native application demonstrates barcode and QR code rendering,
+generation, and image saving with `mobile-native-barcode-generator`.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+The app supports Android, iOS, Windows, and Web.
 
-## Step 1: Start Metro
+## Requirements
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
+Install the project dependencies from the `example` directory:
 
 ```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+npm install
 ```
 
-## Step 2: Build and run your app
+### Android
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+- Node.js 22.11 or newer
+- Android Studio and Android SDK
+- Java 17
+- Android emulator or physical device
+
+### iOS
+
+- macOS
+- Xcode
+- CocoaPods
+- iOS Simulator or physical device
+
+Install the pods:
+
+```sh
+cd ios
+pod install
+cd ..
+```
+
+### Windows
+
+- Windows 10 or Windows 11 with Developer Mode enabled
+- Node.js 22 or newer
+- .NET SDK 10
+- PowerShell 7
+- Visual Studio 2026 with **Desktop development with C++**
+- MSBuild, MSVC x64/x86 tools, and Windows 11 SDK `10.0.22621.0`
+
+Verify the Windows requirements with:
+
+```powershell
+.\node_modules\react-native-windows\scripts\rnw-dependencies.ps1
+```
+
+### Web
+
+- A current browser with WebAssembly support
+
+## Development
+
+Run these commands from the `example` directory.
 
 ### Android
 
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
 ### iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
 ```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### Windows
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+```powershell
+npm run windows
+```
 
-## Step 3: Modify your app
+### Web
 
-Now that you have successfully run the app, let's make changes!
+```sh
+npm run web
+```
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+The web app runs at `http://localhost:3000`.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Android, iOS, and Windows use Metro. To run Metro separately:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```sh
+npm start
+```
 
-## Congratulations! :tada:
+Then run the desired native platform command in another terminal.
 
-You've successfully run and modified your React Native App. :partying_face:
+## Production builds
 
-### Now what?
+### Android
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Build a release APK:
 
-# Troubleshooting
+```powershell
+cd android
+.\gradlew.bat assembleRelease
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+Output:
 
-# Learn More
+```text
+android/app/build/outputs/apk/release/app-release.apk
+```
 
-To learn more about React Native, take a look at the following resources:
+Build an Android App Bundle:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```powershell
+cd android
+.\gradlew.bat bundleRelease
+```
+
+Output:
+
+```text
+android/app/build/outputs/bundle/release/app-release.aab
+```
+
+Configure a private signing key before publishing the Android app.
+
+### iOS
+
+Open the CocoaPods workspace on macOS:
+
+```sh
+open ios/example.xcworkspace
+```
+
+In Xcode, configure signing and select **Product > Archive**.
+
+### Windows
+
+Build the bundled Release configuration without deploying it:
+
+```powershell
+npm run windows -- --release --bundle --no-packager --no-deploy
+```
+
+To create a distributable package, open the solution:
+
+```powershell
+start windows\example.sln
+```
+
+Select `Release` and `x64` in Visual Studio, then publish the package project.
+
+### Web
+
+```sh
+npm run build:web
+```
+
+The optimized static files are generated in `dist-web/`.
+
+## Tests and linting
+
+```sh
+npm test
+npm run test:windows
+npm run lint
+```
