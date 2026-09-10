@@ -10,6 +10,7 @@
     "web": "webpack serve --mode=development",
     "build:web": "webpack --mode=production",
     "test": "jest",
+    "prewindows": "node scripts/patch-rnw-powershell.js",
     "windows": "npx @react-native-community/cli run-windows",
     "test:windows": "jest --config jest.config.windows.js"
   },
